@@ -5,18 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace UserService.Register;
 
 [ApiController]
-[Route ("api/[controller]")]
-public class RegisterUserController : ControllerBase
+[Route ("api/user")]
+public class RegisterUserController(IUserRegisterService userRegisterService) : ControllerBase
 {
-    private readonly IUserRegisterService _userRegisterService;
-
-    public RegisterUserController(IUserRegisterService userRegisterService)
-    {
-        _userRegisterService = userRegisterService;
-    }
-
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync(UserRegisterationRequest request)
+    public async Task<IActionResult> RegisterAsync(UserRegisterationRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -25,7 +18,7 @@ public class RegisterUserController : ControllerBase
                 return BadRequest(ModelState);
             }
             
-            var response = await _userRegisterService.RegisterAsync(request);
+            var response = await userRegisterService.RegisterAsync(request, cancellationToken);
             return Ok(response);
         }
         catch (UserRegisterException ex)

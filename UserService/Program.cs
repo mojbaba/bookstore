@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UserService;
+using UserService.EventPublisher;
+using UserService.Login;
 using UserService.Register;
+using UserService.Register.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,10 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
+builder.Services.AddScoped<IUserLoginService, UserLoginService>();
+builder.Services.AddTransient<ITokenService, JwtTokenService>();
+builder.Services.AddSingleton<IUserLoginEventSource, UserLoginEventSource>();
+builder.Services.AddSingleton<IUserRegisterEventSource, UserRegisterEventSource>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -42,6 +49,10 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 
 // Configure the HTTP request pipeline.

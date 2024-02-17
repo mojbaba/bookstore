@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using UserService.EventPublisher;
 
 namespace UserService.Register;
 
-public class UserRegisterService(UserServiceDbContext dbContext) : IUserRegisterService
+public class UserRegisterService(UserServiceDbContext dbContext, IUserRegisterEventSource eventPublishObservant) : IUserRegisterService
 {
-    public async Task<UserRegisterationResponse> RegisterAsync(UserRegisterationRequest request)
+    public async Task<UserRegisterationResponse> RegisterAsync(UserRegisterationRequest request, CancellationToken cancellationToken)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email,cancellationToken);
         if (user != null)
         {
             throw new UserRegisterException("Email is already registered");
@@ -27,7 +28,14 @@ public class UserRegisterService(UserServiceDbContext dbContext) : IUserRegister
         
         dbContext.Users.Add(newUser);
         
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
+        
+        await eventPublishObservant.PublishAsync(new Events.UserRegisteredEvent
+        {
+            Id = newUser.Id,
+            Email = newUser.Email,
+            Date = DateTimeOffset.Now
+        });
         
         return new UserRegisterationResponse
         {
