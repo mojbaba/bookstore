@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UserService.Register;
 
-public class UserRegisterationRequest
+public record UserRegisterationRequest
 {
     [EmailAddress]
     [Required]
