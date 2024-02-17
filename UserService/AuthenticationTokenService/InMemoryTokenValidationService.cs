@@ -51,11 +51,18 @@ public class InMemoryTokenValidationService : ITokenValidationService, IEventPub
 
     public Task OnEventPublished(EventBase @event)
     {
-        if (@event is UserLoggedoutEvent userLoggedoutEvent)
+        if (@event is not UserLoggedOutEvent userLoggedOutEvent)
         {
-            _revokedTokensQueue.Enqueue(new RevokedToken(userLoggedoutEvent.Token, userLoggedoutEvent.Date));
-            _revokedTokens.Add(userLoggedoutEvent.Token);
+            return Task.CompletedTask;
         }
+        
+        if(_revokedTokens.Contains(userLoggedOutEvent.Token))
+        {
+            return Task.CompletedTask;
+        }
+
+        _revokedTokensQueue.Enqueue(new RevokedToken(userLoggedOutEvent.Token, userLoggedOutEvent.Date));
+        _revokedTokens.Add(userLoggedOutEvent.Token);
 
         return Task.CompletedTask;
     }

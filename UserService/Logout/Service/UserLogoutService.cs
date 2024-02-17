@@ -6,7 +6,7 @@ public class UserLogoutService(IEventPublishObservant eventPublishObservant) : I
 {
     public async Task<bool> LogoutAsync(UserLogoutRequest request, CancellationToken cancellationToken)
     {
-        await eventPublishObservant.PublishAsync(new UserLoggedoutEvent
+        await eventPublishObservant.PublishAsync(new UserLoggedOutEvent
         {
             Date = DateTimeOffset.Now,
             Email = request.Email,
