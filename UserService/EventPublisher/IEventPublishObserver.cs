@@ -1,6 +1,6 @@
 namespace UserService.EventPublisher;
 
-public interface IEventPublishObserver <in T>
+public interface IEventPublishObserver
 {
-    Task OnEventPublished(T @event);
+    Task OnEventPublished(EventBase @event);
 }

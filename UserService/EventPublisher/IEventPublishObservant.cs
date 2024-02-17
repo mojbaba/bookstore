@@ -1,8 +1,8 @@
 namespace UserService.EventPublisher;
 
-public interface IEventPublishObservant<T>
+public interface IEventPublishObservant
 {
-    public Task PublishAsync(T @event);
+    public Task PublishAsync(EventBase @event);
     
-    public void Subscribe(IEventPublishObserver<T> observer);
+    public void Subscribe(IEventPublishObserver observer);
 }
