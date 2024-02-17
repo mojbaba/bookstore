@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UserService;
+using UserService.Register;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ var configuration = builder.Configuration;
 
 builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -34,7 +37,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
+
+app.MapControllers();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -44,6 +52,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 
 
 app.Run();
