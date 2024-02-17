@@ -1,0 +1,19 @@
+version: '3.4'
+
+name: user-service-dependencies
+services:
+  user-service-db:
+    image: "postgres:14"
+    restart: always
+    ports: [ "5470:5432" ]
+    environment:
+      POSTGRES_DB: userservice
+      POSTGRES_USER: userservice
+      POSTGRES_PASSWORD: userservice
+    command: postgres -c 'log_statement=all' -c 'max_connections=500'
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 50M
