@@ -2,9 +2,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace UserService
 {
-    public class UserServiceDbContext(DbContextOptions<UserServiceDbContext> options) : DbContext(options)
+    public class UserServiceDbContext : DbContext
     {
-        public DbSet<UserEntity> Users { get; set; }
+
+        public UserServiceDbContext(DbContextOptions<UserServiceDbContext> options) : base(options)
+        {
+        }
+
+        public UserServiceDbContext()
+        {
+        }
+        
+        public virtual DbSet<UserEntity> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

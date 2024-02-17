@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService", "TokenService\TokenService.csproj", "{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.IntegrationTest", "UserService.IntegrationTest\UserService.IntegrationTest.csproj", "{6AA24FA0-3150-4067-82D2-706F18F6C9EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.UnitTest", "UserService.UnitTest\UserService.UnitTest.csproj", "{98EDB970-903E-4747-B0D1-D5AF5257382B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,13 @@ Global
 		{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AA24FA0-3150-4067-82D2-706F18F6C9EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AA24FA0-3150-4067-82D2-706F18F6C9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AA24FA0-3150-4067-82D2-706F18F6C9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AA24FA0-3150-4067-82D2-706F18F6C9EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EDB970-903E-4747-B0D1-D5AF5257382B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EDB970-903E-4747-B0D1-D5AF5257382B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EDB970-903E-4747-B0D1-D5AF5257382B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EDB970-903E-4747-B0D1-D5AF5257382B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
