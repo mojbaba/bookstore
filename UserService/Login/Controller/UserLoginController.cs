@@ -25,12 +25,4 @@ public class UserLoginController(IUserLoginService userLoginService) : Controlle
             return BadRequest(ex.Message);
         }
     }
-
-    [Authorize]
-    [HttpPost("logout")]
-    public async Task<IActionResult> LogoutAsync(CancellationToken cancellationToken = default)
-    {
-        await Task.Delay(200, cancellationToken);
-        return Ok();
-    }
 }

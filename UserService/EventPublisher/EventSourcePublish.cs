@@ -1,18 +1,20 @@
 namespace UserService.EventPublisher;
 
-public abstract class EventSourcePublishBase<T> : IEventPublishObservant<T>
+public class EventSourcePublish : IEventPublishObservant
 {
-    private readonly List<IEventPublishObserver<T>> _observers = [];
-    public Task PublishAsync(T @event)
+    private readonly List<IEventPublishObserver> _observers = [];
+
+    public Task PublishAsync(EventBase @event)
     {
         foreach (var observer in _observers)
         {
             observer.OnEventPublished(@event);
         }
+
         return Task.CompletedTask;
     }
 
-    public void Subscribe(IEventPublishObserver<T> observer)
+    public void Subscribe(IEventPublishObserver observer)
     {
         _observers.Add(observer);
     }

@@ -4,20 +4,22 @@ using UserService.EventPublisher;
 
 namespace UserService.Register;
 
-public class UserRegisterService(UserServiceDbContext dbContext, IUserRegisterEventSource eventPublishObservant) : IUserRegisterService
+public class UserRegisterService(IUserRepository repository, IEventPublishObservant eventPublishObservant)
+    : IUserRegisterService
 {
-    public async Task<UserRegisterationResponse> RegisterAsync(UserRegisterationRequest request, CancellationToken cancellationToken)
+    public async Task<UserRegisterationResponse> RegisterAsync(UserRegisterationRequest request,
+        CancellationToken cancellationToken)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email,cancellationToken);
+        var user = await repository.GetUserAsync(request.Email, cancellationToken);
         if (user != null)
         {
             throw new UserRegisterException("Email is already registered");
         }
-        
+
         var passwordHasher = new PasswordHasher<UserEntity>();
         var randomSalt = Guid.NewGuid().ToString();
         var passwordHash = passwordHasher.HashPassword(null, request.Password + randomSalt);
-        
+
         var newUser = new UserEntity
         {
             Id = Guid.NewGuid().ToString(),
@@ -25,18 +27,18 @@ public class UserRegisterService(UserServiceDbContext dbContext, IUserRegisterEv
             Password = passwordHash,
             Salt = randomSalt
         };
-        
-        dbContext.Users.Add(newUser);
-        
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
+
+        var createdUser = await repository.CreateUserAsync(newUser, cancellationToken);
+
+        await repository.SaveChangesAsync(cancellationToken);
+
         await eventPublishObservant.PublishAsync(new Events.UserRegisteredEvent
         {
             Id = newUser.Id,
             Email = newUser.Email,
             Date = DateTimeOffset.Now
         });
-        
+
         return new UserRegisterationResponse
         {
             Email = newUser.Email

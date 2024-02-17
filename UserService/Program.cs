@@ -2,9 +2,11 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using UserService;
 using UserService.EventPublisher;
 using UserService.Login;
+using UserService.Logout;
 using UserService.Register;
 using UserService.Register.Events;
 
@@ -13,7 +15,29 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 var configuration = builder.Configuration;
 
@@ -22,9 +46,11 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
 
 builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
 builder.Services.AddScoped<IUserLoginService, UserLoginService>();
+builder.Services.AddScoped<IUserLogoutService, UserLogoutService>();
 builder.Services.AddTransient<ITokenService, JwtTokenService>();
-builder.Services.AddSingleton<IUserLoginEventSource, UserLoginEventSource>();
-builder.Services.AddSingleton<IUserRegisterEventSource, UserRegisterEventSource>();
+builder.Services.AddSingleton<IEventPublishObservant, EventSourcePublish>();
+builder.Services.AddScoped<IUserRepository, EntityFrameworkUserRepository>();
+builder.Services.AddSingleton<ITokenValidationService, InMemoryTokenValidationService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -47,6 +73,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseMiddleware<JwtValidationMiddleware>();
 
 app.MapControllers();
 
