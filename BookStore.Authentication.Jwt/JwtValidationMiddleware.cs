@@ -1,6 +1,7 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 
-namespace UserService;
+namespace BookStore.Authentication.Jwt;
 
 public class JwtValidationMiddleware
 {
@@ -18,7 +19,7 @@ public class JwtValidationMiddleware
         var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
         
-        if (await _tokenValidationService.ValidateTokenAsync(token,default))
+        if (string.IsNullOrEmpty(token) || await _tokenValidationService.ValidateTokenAsync(token,default))
         {
             await _next(context);
         }

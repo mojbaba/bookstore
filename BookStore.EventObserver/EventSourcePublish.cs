@@ -1,6 +1,6 @@
-namespace UserService.EventPublisher;
+namespace BookStore.EventObserver;
 
-public class EventSourcePublish : IEventPublishObservant
+internal class EventSourcePublish : IEventPublishObservant
 {
     private readonly List<IEventPublishObserver> _observers = [];
 

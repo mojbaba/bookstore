@@ -1,4 +1,4 @@
-using UserService.EventPublisher;
+using BookStore.EventObserver;
 
 namespace UserService.Register.Events;
 

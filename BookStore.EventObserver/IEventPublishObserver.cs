@@ -1,4 +1,4 @@
-namespace UserService.EventPublisher;
+namespace BookStore.EventObserver;
 
 public interface IEventPublishObserver
 {
