@@ -1,14 +1,15 @@
 using System.Text;
+using BookStore.Authentication.Jwt;
+using BookStore.Authentication.Jwt.Redis;
+using BookStore.EventObserver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService;
-using UserService.EventPublisher;
 using UserService.Login;
 using UserService.Logout;
 using UserService.Register;
-using UserService.Register.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,9 +49,11 @@ builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
 builder.Services.AddScoped<IUserLoginService, UserLoginService>();
 builder.Services.AddScoped<IUserLogoutService, UserLogoutService>();
 builder.Services.AddTransient<ITokenService, JwtTokenService>();
-builder.Services.AddSingleton<IEventPublishObservant, EventSourcePublish>();
+builder.Services.RegisterEventSourceObservant();
 builder.Services.AddScoped<IUserRepository, EntityFrameworkUserRepository>();
-builder.Services.AddSingleton<ITokenValidationService, InMemoryTokenValidationService>();
+builder.Services.AddRedisTokenValidationService(configuration.GetConnectionString("RedisConnection"));
+
+builder.Services.AddTokenValidationServiceDecorator();
 
 builder.Services.AddAuthentication(options =>
 {

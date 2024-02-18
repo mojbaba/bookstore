@@ -17,3 +17,7 @@ services:
           memory: 100M
         reservations:
           memory: 50M
+          
+  user-service-redis:
+    image: "redis:6"
+    ports: [ "6379:6379" ]

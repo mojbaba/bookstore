@@ -1,4 +1,6 @@
-using UserService.EventPublisher;
+
+
+using BookStore.EventObserver;
 
 namespace UserService.Login;
 

@@ -1,6 +1,5 @@
+using BookStore.EventObserver;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using UserService.EventPublisher;
 
 namespace UserService.Login;
 
