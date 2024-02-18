@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="UserService.IntegrationTest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookStore.Authentication.Jwt.Redis\BookStore.Authentication.Jwt.Redis.csproj" />
     <ProjectReference Include="..\BookStore.Authentication.Jwt\BookStore.Authentication.Jwt.csproj" />
     <ProjectReference Include="..\BookStore.EventObserver\BookStore.EventObserver.csproj" />

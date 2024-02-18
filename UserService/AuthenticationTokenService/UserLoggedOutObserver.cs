@@ -13,7 +13,7 @@ public class UserLoggedOutObserver : IEventPublishObserver
         IConfiguration configuration)
     {
         _serviceProvider = serviceProvider;
-        _expiryMinutes = configuration.GetValue<int>("Jwt:ExpiryMinutes");
+        _expiryMinutes = int.Parse(configuration["Jwt:ExpiryMinutes"]);
     }
 
     public async Task OnEventPublished(EventBase @event)
@@ -24,7 +24,7 @@ public class UserLoggedOutObserver : IEventPublishObserver
         }
 
         using var tokenValidationService = _serviceProvider.GetRequiredService<ITokenValidationService>();
-        
+
         await tokenValidationService.RevokeTokenAsync(userLogoutEvent.Token, TimeSpan.FromMinutes(_expiryMinutes),
             CancellationToken.None);
     }

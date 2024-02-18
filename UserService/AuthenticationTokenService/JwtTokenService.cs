@@ -13,7 +13,7 @@ public class JwtTokenService(IConfiguration configuration) : ITokenService
         var key = Encoding.ASCII.GetBytes(configuration["Jwt:SecretKey"]);
         var issuer = configuration["Jwt:Issuer"];
         var audience = configuration["Jwt:Audience"];
-        var expiryMinutes = configuration.GetValue<int>("Jwt:ExpiryMinutes");
+        var expiryMinutes = int.Parse(configuration["Jwt:ExpiryMinutes"]);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Sid, id) }),
