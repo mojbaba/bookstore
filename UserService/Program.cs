@@ -53,7 +53,7 @@ builder.Services.RegisterEventSourceObservant();
 builder.Services.AddScoped<IUserRepository, EntityFrameworkUserRepository>();
 builder.Services.AddRedisTokenValidationService(configuration.GetConnectionString("RedisConnection"));
 
-builder.Services.AddTokenValidationServiceDecorator();
+builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutObserver>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -76,6 +76,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.SubscribeObservers();
 
 app.UseMiddleware<JwtValidationMiddleware>();
 
