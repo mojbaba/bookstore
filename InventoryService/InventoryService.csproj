@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="AdminOperations\Events\" />
+    <Folder Include="EventLogConsumers\" />
   </ItemGroup>
 
 </Project>

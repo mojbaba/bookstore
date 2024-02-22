@@ -2,7 +2,7 @@ using BookStore.EventObserver;
 
 namespace BookStore.Contracts;
 
-public record OrderedBooksNotAvailableEvent : EventBase
+public record OrderedBooksPackingFailedEvent : EventBase
 {
     public string OrderId { get; set; }
     public IEnumerable<string> BookIds { get; set; } = new[] { "" };
