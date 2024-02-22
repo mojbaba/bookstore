@@ -4,7 +4,8 @@ using OrderService.CreateOrder;
 
 namespace OrderService.KafkaObserversForProduce;
 
-public class OrderFailedEventObserver(IEventLogProducer eventLogProducer, IConfiguration configuration) : IEventPublishObserver
+public class OrderFailedEventObserver(IEventLogProducer eventLogProducer, IConfiguration configuration)
+    : IEventPublishObserver
 {
     public Task OnEventPublished(EventBase @event)
     {
@@ -13,6 +14,7 @@ public class OrderFailedEventObserver(IEventLogProducer eventLogProducer, IConfi
             return Task.CompletedTask;
         }
 
-        return eventLogProducer.ProduceAsync<OrderFailedEvent>(configuration["Kafka:Topics:OrderFailedTopic"], orderFailedEvent, CancellationToken.None);
+        return eventLogProducer.ProduceAsync<OrderFailedEvent>(configuration["Kafka:Topics:OrderFailedTopic"],
+            orderFailedEvent, CancellationToken.None);
     }
 }
