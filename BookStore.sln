@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Authentication.Jw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Contracts", "BookStore.Contracts\BookStore.Contracts.csproj", "{818E5754-90F5-4A3A-97DF-4947876531FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService.IntegrationTest", "TokenService.IntegrationTest\TokenService.IntegrationTest.csproj", "{B87CCC1E-00E5-479B-910F-CB030C685513}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,5 +98,9 @@ Global
 		{818E5754-90F5-4A3A-97DF-4947876531FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{818E5754-90F5-4A3A-97DF-4947876531FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{818E5754-90F5-4A3A-97DF-4947876531FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

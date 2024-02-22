@@ -4,7 +4,7 @@ using TokenService.Entities;
 namespace TokenService.AddToken;
 
 public class AddBookPurchaseTokenService(
-    BookPurchaseTokenRepository tokenRepository,
+    IBookPurchaseTokenRepository tokenRepository,
     IEventPublishObservant eventPublishObservant) : IAddBookPurchaseTokenService
 {
     public async Task<AddBookPurchaseTokenResponse> AddBookPurchaseTokenAsync(AddBookPurchaseTokenReqeust request,

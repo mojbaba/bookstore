@@ -3,7 +3,7 @@ using TokenService.Entities;
 
 namespace TokenService.RemoveToken;
 
-public class RemoveBookPurchaseTokenService(BookPurchaseTokenRepository repository, IEventPublishObservant eventPublishObservant) : IRemoveBookPurchaseTokenService
+public class RemoveBookPurchaseTokenService(IBookPurchaseTokenRepository repository, IEventPublishObservant eventPublishObservant) : IRemoveBookPurchaseTokenService
 {
     public async Task<RemoveBookPurchaseTokenResponse> RemoveBookPurchaseTokenAsync(RemoveBookPurchaseTokenRequest request, CancellationToken cancellationToken)
     {

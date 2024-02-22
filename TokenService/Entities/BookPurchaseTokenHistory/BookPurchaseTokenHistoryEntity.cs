@@ -11,7 +11,7 @@ public enum BookPurchaseTokenHistoryType
 
 public class BookPurchaseTokenHistoryEntity
 {
-    [Key] public string Id { get; set; }
+    [Key] public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [MaxLength(200)]
     [ForeignKey(nameof(BookPurchaseToken))]
@@ -22,6 +22,6 @@ public class BookPurchaseTokenHistoryEntity
     public long Amount { get; set; }
     
     public long UpdatedBalance { get; set; }
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public BookPurchaseTokenHistoryType Type { get; set; }
 }

@@ -1,19 +1,17 @@
 using BookStore.TestingTools;
-using Confluent.Kafka;
-using Confluent.Kafka.Admin;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Testcontainers.Kafka;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
-using Moq;
-using Testcontainers.Kafka;
+using TokenService.Entities;
 
-namespace UserService.IntegrationTest;
+namespace TokenService.IntegrationTest;
 
-public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLifetime
+public class TokenServiceHostFixture : WebApplicationFactory<Program>, IAsyncLifetime
 {
     public async Task InitializeAsync()
     {
@@ -41,7 +39,7 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
     private async Task ApplyMigration()
     {
         using var scope = Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<UserServiceDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<BookPurchaseTokenDbContext>();
         await context.Database.MigrateAsync();
     }
 

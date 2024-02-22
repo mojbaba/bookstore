@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TokenService.AddToken;
+using TokenService.BookPurchaseTokenHistoryHandlers;
 using TokenService.Entities;
+using TokenService.RemoveToken;
 
 namespace TokenService;
 
@@ -47,18 +50,27 @@ public class Program
                 }
             });
         });
-        builder.Services.AddDbContext<BookPurchaseTokenDbContext>((p,options) =>
+        
+        builder.Services.AddDbContext<BookPurchaseTokenDbContext>((p, options) =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
             options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
-        });
+        }, ServiceLifetime.Transient, ServiceLifetime.Transient);
         
+        builder.Services.AddTransient<IBookPurchaseTokenRepository, BookPurchaseTokenRepository>();
+        builder.Services.AddTransient<IBookPurchaseTokenHistoryRepository, BookPurchaseTokenHistoryRepository>();
+        builder.Services.AddTransient<IAddBookPurchaseTokenService, AddBookPurchaseTokenService>();
+        builder.Services.AddTransient<IRemoveBookPurchaseTokenService, RemoveBookPurchaseTokenService>();
+        builder.Services.AddTransient<IBookPurchaseTokenAddedHandler, BookPurchaseTokenAddedHandler>();
+        builder.Services.AddTransient<IBookPurchaseTokenRemovedHandler, BookPurchaseTokenRemovedHandler>();
+
+
         builder.Services.AddRedisTokenValidationService(p =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
             return configuration.GetConnectionString("RedisConnection");
         });
-        
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,24 +90,26 @@ public class Program
             };
         });
 
+        builder.Services.RegisterEventSourceObservant();
+
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenAddedObserverForHistory>();
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenRemovedObserverForHistory>();
 
-        builder.Services.AddKafkaUserLoggedOutHandler(p =>
-        {
-            var configuration = p.GetRequiredService<IConfiguration>();
-            return new KafkaUserLoggedOutOptions
-            {
-                GroupId = configuration["Kafka:GroupId"],
-                BootstrapServers = configuration["Kafka:BootstrapServers"],
-                Topic = configuration["Kafka:Topics:UserLogoutTopic"]
-            };
-        });
+        // builder.Services.AddKafkaUserLoggedOutHandler(p =>
+        // {
+        //     var configuration = p.GetRequiredService<IConfiguration>();
+        //     return new KafkaUserLoggedOutOptions
+        //     {
+        //         GroupId = configuration["Kafka:GroupId"],
+        //         BootstrapServers = configuration["Kafka:BootstrapServers"],
+        //         Topic = configuration["Kafka:Topics:UserLogoutTopic"]
+        //     };
+        // });
 
         builder.Services.AddControllers();
 
         var app = builder.Build();
-        
+
         app.SubscribeObservers();
 
         app.UseMiddleware<JwtValidationMiddleware>();

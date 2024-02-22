@@ -4,7 +4,7 @@ using TokenService.RemoveToken;
 
 namespace TokenService.ObserversForHistory;
 
-public class TokenRemovedObserverForHistory(BookPurchaseTokenRemovedHandler purchaseTokenRemovedHandler)
+public class TokenRemovedObserverForHistory(IBookPurchaseTokenRemovedHandler purchaseTokenRemovedHandler)
     : IEventPublishObserver
 {
     public Task OnEventPublished(EventBase @event)
