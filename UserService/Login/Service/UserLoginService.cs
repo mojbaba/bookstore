@@ -7,7 +7,7 @@ public class UserLoginService(IUserRepository repository , ITokenService tokenSe
 {
     public async Task<UserLoginResponse> LoginAsync(UserLoginRequest request, CancellationToken cancellationToken)
     {
-        var user = await repository.GetUserAsync(request.Email, cancellationToken);
+        var user = await repository.GetAsync(request.Email, cancellationToken);
         if (user == null)
         {
             throw new UserLoginException("Invalid email or password");

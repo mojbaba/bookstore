@@ -4,27 +4,27 @@ namespace UserService;
 
 public class EntityFrameworkUserRepository(UserServiceDbContext dbContext) : IUserRepository
 {
-    public Task<UserEntity?> GetUserAsync(string email, CancellationToken cancellationToken)
+    public Task<UserEntity?> GetAsync(string email, CancellationToken cancellationToken)
     {
         return dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
     }
 
-    public Task<UserEntity?> GetUserAsync(Guid id, CancellationToken cancellationToken)
+    public Task<UserEntity?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
         return dbContext.Users.FirstOrDefaultAsync(x => x.Id == id.ToString(), cancellationToken);
     }
 
-    public Task<UserEntity> CreateUserAsync(UserEntity user, CancellationToken cancellationToken)
+    public Task<UserEntity> CreateAsync(UserEntity user, CancellationToken cancellationToken)
     {
         return Task.FromResult(dbContext.Users.Add(user).Entity);
     }
 
-    public Task<UserEntity> UpdateUserAsync(UserEntity user, CancellationToken cancellationToken)
+    public Task<UserEntity> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
     {
         return Task.FromResult(dbContext.Users.Update(user).Entity);
     }
 
-    public async Task<UserEntity> DeleteUserAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<UserEntity> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id.ToString(), cancellationToken);
         if (user == null)
@@ -35,7 +35,7 @@ public class EntityFrameworkUserRepository(UserServiceDbContext dbContext) : IUs
         return dbContext.Users.Remove(user).Entity;
     }
 
-    public async Task<UserEntity> DeleteUserAsync(string email, CancellationToken cancellationToken)
+    public async Task<UserEntity> DeleteAsync(string email, CancellationToken cancellationToken)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
         if (user == null)

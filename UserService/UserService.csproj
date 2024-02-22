@@ -34,6 +34,7 @@
     <ProjectReference Include="..\BookStore.Authentication.Jwt\BookStore.Authentication.Jwt.csproj" />
     <ProjectReference Include="..\BookStore.EventLog.Kafka\BookStore.EventLog.Kafka.csproj" />
     <ProjectReference Include="..\BookStore.EventObserver\BookStore.EventObserver.csproj" />
+    <ProjectReference Include="..\BookStore.Repository\BookStore.Repository.csproj" />
   </ItemGroup>
 
 </Project>
