@@ -4,6 +4,7 @@ namespace OrderService.Entities;
 
 public enum OrderStatus
 {
+    Processing,
     Succeeded,
     Failed
 }
