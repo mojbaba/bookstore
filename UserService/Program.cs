@@ -50,10 +50,11 @@ public class Program
             });
         });
 
-        var configuration = builder.Configuration;
-
-        builder.Services.AddDbContext<UserServiceDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection")));
+        builder.Services.AddDbContext<UserServiceDbContext>((p,options) =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+        });
 
         builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
         builder.Services.AddScoped<IUserLoginService, UserLoginService>();
@@ -61,7 +62,11 @@ public class Program
         builder.Services.AddTransient<ITokenService, JwtTokenService>();
         builder.Services.RegisterEventSourceObservant();
         builder.Services.AddScoped<IUserRepository, EntityFrameworkUserRepository>();
-        builder.Services.AddRedisTokenValidationService(configuration.GetConnectionString("RedisConnection"));
+        builder.Services.AddRedisTokenValidationService(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return configuration.GetConnectionString("RedisConnection");
+        });
 
         builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutObserver>();
 
@@ -71,6 +76,7 @@ public class Program
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
+            var configuration = builder.Configuration;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,

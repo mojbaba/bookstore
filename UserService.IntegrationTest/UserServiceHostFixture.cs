@@ -16,10 +16,24 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
 {
     public async Task InitializeAsync()
     {
-        await CreateKafka();
-        await CreateDatabase();
-        await CreateRedis();
-        await ApplyMigration();
+        try
+        {
+            await CreateKafka();
+            await CreateDatabase();
+            await CreateRedis();
+            await ApplyMigration();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureServices(RegisterConfiguration);
+        base.ConfigureWebHost(builder);
     }
 
     private async Task CreateRedis()
@@ -31,11 +45,9 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
 
         await Redis.StartAsync();
 
-        var configuration = this.Services.GetRequiredService<IConfiguration>();
-
         var connectionString = Redis.GetConnectionString();
 
-        configuration["ConnectionStrings:RedisConnection"] = connectionString;
+        Configuration["ConnectionStrings:RedisConnection"] = connectionString;
     }
 
     private async Task CreateDatabase()
@@ -50,11 +62,9 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
 
         await Postgresql.StartAsync();
 
-        var configuration = this.Services.GetRequiredService<IConfiguration>();
-
         var connectionString = Postgresql.GetConnectionString();
 
-        configuration["ConnectionStrings:PostgreSqlConnection"] = connectionString;
+        Configuration["ConnectionStrings:PostgreSqlConnection"] = connectionString;
     }
 
     private async Task CreateKafka()
@@ -67,11 +77,9 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
 
         await Kafka.StartAsync();
 
-        var configuration = this.Services.GetRequiredService<IConfiguration>();
-
         var connectionString = Kafka.GetBootstrapAddress();
 
-        configuration["ConnectionStrings:KafkaConnection"] = connectionString;
+        Configuration["Kafka:BootstrapServers"] = connectionString;
 
         using var kafkaAdminClient = new AdminClientBuilder(new AdminClientConfig
         {
@@ -82,16 +90,20 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
         {
             var topicsToCreate = new TopicSpecification[]
             {
-                new TopicSpecification { Name = configuration["Kafka:UserLoginTopic"], ReplicationFactor = 1, NumPartitions = 1 },
-                new TopicSpecification { Name = configuration["Kafka:UserLogoutTopic"] , ReplicationFactor = 1, NumPartitions = 1 },
-                new TopicSpecification { Name = configuration["Kafka:UserRegisterTopic"], ReplicationFactor = 1, NumPartitions = 1 }
+                new TopicSpecification
+                    { Name = Configuration["Kafka:UserLoginTopic"], ReplicationFactor = 1, NumPartitions = 1 },
+                new TopicSpecification
+                    { Name = Configuration["Kafka:UserLogoutTopic"], ReplicationFactor = 1, NumPartitions = 1 },
+                new TopicSpecification
+                    { Name = Configuration["Kafka:UserRegisterTopic"], ReplicationFactor = 1, NumPartitions = 1 }
             };
-            
+
             var existingTopics = kafkaAdminClient.GetMetadata(TimeSpan.FromMinutes(1));
             var existingTopicNames = existingTopics.Topics.Select(topic => topic.Topic);
-            
-            var topicsToCreateFiltered = topicsToCreate.Where(topic => !existingTopicNames.Contains(topic.Name)).ToArray();
-            
+
+            var topicsToCreateFiltered =
+                topicsToCreate.Where(topic => !existingTopicNames.Contains(topic.Name)).ToArray();
+
             if (topicsToCreateFiltered.Length > 0)
             {
                 await kafkaAdminClient.CreateTopicsAsync(topicsToCreateFiltered);
@@ -111,11 +123,26 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
         await context.Database.MigrateAsync();
     }
 
+    private void RegisterConfiguration(IServiceCollection serviceCollection)
+    {
+        var descriptor = serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IConfiguration));
+
+        if (descriptor != null)
+            serviceCollection.Remove(descriptor);
+
+        serviceCollection.AddSingleton<IConfiguration>(Configuration);
+    }
+
     public PostgreSqlContainer Postgresql { get; private set; }
 
     public RedisContainer Redis { get; private set; }
 
     public KafkaContainer Kafka { get; set; }
+
+    public IConfiguration Configuration { get; private set; } = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json")
+        .Build();
+
 
     public async Task DisposeAsync()
     {
@@ -123,5 +150,6 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
 
         await Redis.DisposeAsync();
         await Postgresql.StopAsync();
+        await Kafka.StopAsync();
     }
 }
