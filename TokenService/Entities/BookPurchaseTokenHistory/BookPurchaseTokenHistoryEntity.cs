@@ -14,8 +14,10 @@ public class BookPurchaseTokenHistoryEntity
     [Key] public string Id { get; set; }
 
     [MaxLength(200)]
-    [ForeignKey("BookPurchaseToken")]
+    [ForeignKey(nameof(BookPurchaseToken))]
     public string UserId { get; set; }
+    
+    public virtual BookPurchaseTokenEntity BookPurchaseToken { get; set; }
 
     public long Amount { get; set; }
     

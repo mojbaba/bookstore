@@ -17,12 +17,6 @@ public class BookPurchaseTokenDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .Entity<BookPurchaseTokenHistoryEntity>()
-            .HasOne<BookPurchaseTokenEntity>()
-            .WithMany()
-            .HasForeignKey(a => a.UserId);
-
         base.OnModelCreating(modelBuilder);
     }
 }
