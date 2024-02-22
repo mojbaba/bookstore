@@ -1,5 +1,6 @@
 using System.Text;
 using BookStore.Authentication.Jwt;
+using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.Authentication.Jwt.Redis;
 using BookStore.EventObserver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,6 +80,17 @@ public class Program
 
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenAddedObserverForHistory>();
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenRemovedObserverForHistory>();
+
+        builder.Services.AddKafkaUserLoggedOutHandler(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new KafkaUserLoggedOutOptions
+            {
+                GroupId = configuration["Kafka:GroupId"],
+                BootstrapServers = configuration["Kafka:BootstrapServers"],
+                Topic = configuration["Kafka:Topics:UserLogoutTopic"]
+            };
+        });
 
         builder.Services.AddControllers();
 

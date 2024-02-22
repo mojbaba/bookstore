@@ -10,15 +10,17 @@ public class KafkaUserLoggedoutConsumer : BackgroundService
     private readonly string _bootstrapServers;
     private readonly string _groupId;
     private readonly string _topic;
+    private readonly KafkaUserLoggedOutHandler _userLoggedOutHandler;
 
-    public KafkaUserLoggedoutConsumer(KafkaUserLoggedOutOptions options)
+    public KafkaUserLoggedoutConsumer(KafkaUserLoggedOutOptions options, KafkaUserLoggedOutHandler userLoggedOutHandler)
     {
         _bootstrapServers = options.BootstrapServers;
         _groupId = options.GroupId;
         _topic = options.Topic;
+        _userLoggedOutHandler = userLoggedOutHandler;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var config = new ConsumerConfig
         {
@@ -37,6 +39,7 @@ public class KafkaUserLoggedoutConsumer : BackgroundService
             {
                 var consumeResult = consumer.Consume(stoppingToken);
                 var userLoggedOutEvent = JsonSerializer.Deserialize<UserLoggedOutEvent>(consumeResult.Message.Value);
+                await _userLoggedOutHandler.Handle(userLoggedOutEvent, stoppingToken);
                 Console.WriteLine(
                     $"Consumed message '{consumeResult.Message.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
             }
@@ -48,7 +51,5 @@ public class KafkaUserLoggedoutConsumer : BackgroundService
             {
             }
         }
-
-        return Task.CompletedTask;
     }
 }

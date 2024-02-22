@@ -7,11 +7,15 @@ namespace BookStore.Authentication.Jwt.KafkaLoggedOut;
 public static class ServiceRegisteration
 {
     public static IServiceCollection AddKafkaUserLoggedOutHandler(this IServiceCollection services,
-        Action<KafkaUserLoggedOutOptions> options)
+        Func<IServiceProvider, KafkaUserLoggedOutOptions> getOptions)
     {
-        services.Configure<KafkaUserLoggedOutOptions>(options);
         services.AddSingleton<KafkaUserLoggedOutHandler>();
-        services.AddSingleton<IHostedService, KafkaUserLoggedoutConsumer>();
+        services.AddHostedService<KafkaUserLoggedoutConsumer>(p =>
+        {
+            var options = getOptions(p);
+            var userLoggedOutHandler = p.GetRequiredService<KafkaUserLoggedOutHandler>();
+            return new KafkaUserLoggedoutConsumer(options, userLoggedOutHandler);
+        });
         return services;
     }
 }
