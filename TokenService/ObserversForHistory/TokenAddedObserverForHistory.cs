@@ -4,7 +4,7 @@ using TokenService.BookPurchaseTokenHistoryHandlers;
 
 namespace TokenService.ObserversForHistory;
 
-public class AddObserverForHistory(IBookPurchaseTokenAddedHandler bookPurchaseTokenAddedHandler) : IEventPublishObserver
+public class TokenAddedObserverForHistory(IBookPurchaseTokenAddedHandler bookPurchaseTokenAddedHandler) : IEventPublishObserver
 {
     public Task OnEventPublished(EventBase @event)
     {

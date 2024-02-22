@@ -77,6 +77,9 @@ public class Program
             };
         });
 
+        builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenAddedObserverForHistory>();
+        builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenRemovedObserverForHistory>();
+
         builder.Services.AddControllers();
 
         var app = builder.Build();
