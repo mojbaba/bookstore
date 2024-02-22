@@ -16,7 +16,6 @@ public class AdminOperationsService(IBookRepository bookRepository, IDistributed
         {
             Title = request.Title,
             Author = request.Author,
-            Amount = request.Amount,
             Price = request.Price
         };
 
@@ -47,34 +46,5 @@ public class AdminOperationsService(IBookRepository bookRepository, IDistributed
             throw new SynchronizationLockException("Failed to acquire lock");
         }
     }
-
-    public async Task<AdminChangeBookAmountResponse> ChangeBookAmountAsync(AdminChangeBookAmountRequest request,
-        CancellationToken cancellationToken)
-    {
-        if(distributedLock.TryAcquireLock(request.BookId, TimeSpan.FromSeconds(50), out string lockId))
-        {
-            var book = await bookRepository.GetAsync(request.BookId, cancellationToken);
-            
-            if(book.Amount + request.Amount < 0)
-            {
-                throw new InvalidOperationException("Amount cannot be negative");
-            }
-            
-            book.Amount += request.Amount;
-            await bookRepository.UpdateAsync(book, cancellationToken);
-            await bookRepository.SaveChangesAsync(cancellationToken);
-            
-            distributedLock.TryReleaseLock(request.BookId, lockId);
-            
-            return new AdminChangeBookAmountResponse()
-            {
-                BookId = book.Id,
-                UpdatedAmount = book.Amount
-            };
-        }
-        else
-        {
-            throw new SynchronizationLockException("Failed to acquire lock");
-        }
-    }
+    
 }

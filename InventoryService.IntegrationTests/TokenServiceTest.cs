@@ -28,8 +28,7 @@ public class InventoryServiceTest
         {
             Title = "Test Book",
             Author = "Test Author",
-            Price = 10,
-            Amount = 10
+            Price = 10
         };
 
         // Act
@@ -41,28 +40,7 @@ public class InventoryServiceTest
         response.EnsureSuccessStatusCode();
         Assert.NotNull(result);
         Assert.NotEmpty(result.BookId);
-
-        // Act
-        var increaseAmountResponse = await client.PostAsJsonAsync("/api/admin/change-book-amount",
-            new { BookId = result.BookId, Amount = 10 });
         
-        var changeAmountResult = await increaseAmountResponse.Content.ReadFromJsonAsync<AdminChangeBookAmountResponse>();
-         
-        // Assert
-        increaseAmountResponse.EnsureSuccessStatusCode();
-        Assert.NotNull(changeAmountResult);
-        Assert.Equal(20, changeAmountResult.UpdatedAmount);
-        
-        // Act
-        var decreaseAmountResponse = await client.PostAsJsonAsync("/api/admin/change-book-amount",
-            new { BookId = result.BookId, Amount = -5 });
-        
-        var decreaseAmountResult = await decreaseAmountResponse.Content.ReadFromJsonAsync<AdminChangeBookAmountResponse>();
-        
-        // Assert
-        decreaseAmountResponse.EnsureSuccessStatusCode();
-        Assert.NotNull(decreaseAmountResult);
-        Assert.Equal(15, decreaseAmountResult.UpdatedAmount);
         
         // Act
         var removeBookResponse = await client.PostAsJsonAsync("/api/admin/remove-book",

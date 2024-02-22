@@ -17,7 +17,6 @@ namespace InventoryService.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Author = table.Column<string>(type: "text", nullable: false),
-                    Amount = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

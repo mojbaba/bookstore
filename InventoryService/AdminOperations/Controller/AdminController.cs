@@ -20,11 +20,4 @@ public class AdminController(IAdminOperationsService adminOperationsService) : C
         var response = await adminOperationsService.RemoveBookAsync(request, cancellationToken);
         return Ok(response);
     }
-
-    [HttpPost("change-book-amount")]
-    public async Task<IActionResult> ChangeBookAmountAsync(AdminChangeBookAmountRequest request, CancellationToken cancellationToken)
-    {
-        var response = await adminOperationsService.ChangeBookAmountAsync(request, cancellationToken);
-        return Ok(response);
-    }
 }

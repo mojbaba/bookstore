@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventoryService.Migrations
 {
     [DbContext(typeof(InventoryServiceDbContext))]
-    [Migration("20240222181403_entities-created")]
+    [Migration("20240222191206_entities-created")]
     partial class entitiescreated
     {
         /// <inheritdoc />
@@ -28,9 +28,6 @@ namespace InventoryService.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Author")
                         .IsRequired()

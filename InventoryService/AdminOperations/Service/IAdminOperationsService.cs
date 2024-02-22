@@ -8,7 +8,4 @@ public interface IAdminOperationsService
 {
     Task<AdminAddBookResponse> AddBookAsync(AdminAddBookRequest request, CancellationToken cancellationToken);
     Task<AdminRemoveBookResponse> RemoveBookAsync(AdminRemoveBookRequest request, CancellationToken cancellationToken);
-
-    Task<AdminChangeBookAmountResponse> ChangeBookAmountAsync(AdminChangeBookAmountRequest request,
-        CancellationToken cancellationToken);
 }

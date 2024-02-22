@@ -26,9 +26,6 @@ namespace InventoryService.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasColumnType("text");
