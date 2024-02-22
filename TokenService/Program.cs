@@ -124,11 +124,11 @@ public class Program
         app.SubscribeObservers();
 
         app.UseMiddleware<JwtValidationMiddleware>();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

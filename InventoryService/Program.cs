@@ -1,3 +1,5 @@
+using BookStore.Authentication.Jwt;
+using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.RedisLock;
 using InventoryService.AdminOperations;
 using InventoryService.Entities;
@@ -40,6 +42,17 @@ public class Program
         builder.Services.AddTransient<IAdminOperationsService, AdminOperationsService>();
         builder.Services.AddTransient<IDistributedLock, RedisDistributedLock>();
 
+        builder.Services.AddKafkaUserLoggedOutHandler(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new KafkaUserLoggedOutOptions
+            {
+                GroupId = configuration["Kafka:GroupId"],
+                BootstrapServers = configuration["Kafka:BootstrapServers"],
+                Topic = configuration["Kafka:Topics:UserLogoutTopic"]
+            };
+        });
+
         builder.Services.AddControllers();
 
         var app = builder.Build();
@@ -51,6 +64,10 @@ public class Program
             app.UseSwaggerUI();
         }
         
+        app.UseMiddleware<JwtValidationMiddleware>();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
 
         app.MapControllers();
 
