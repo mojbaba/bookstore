@@ -65,10 +65,10 @@ public class InventoryServiceHostFixture : WebApplicationFactory<Program>, IAsyn
 
     public async Task DisposeAsync()
     {
-        await Task.WhenAll(Redis.StopAsync(), Postgresql.StopAsync());
+        await Task.WhenAll(Redis.StopAsync(), Postgresql.StopAsync(), Kafka.StopAsync());
 
         await Redis.DisposeAsync();
-        await Postgresql.StopAsync();
-        await Kafka.StopAsync();
+        await Postgresql.DisposeAsync();
+        await Kafka.DisposeAsync();
     }
 }
