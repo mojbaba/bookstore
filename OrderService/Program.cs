@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OrderService.CreateOrder;
 using OrderService.Entities;
 using StackExchange.Redis;
 
@@ -47,6 +48,12 @@ public class Program
                     new string[] { }
                 }
             });
+        });
+
+        builder.Services.AddHttpClient<IInventoryClient>((provider, client) =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            client.BaseAddress = new Uri(configuration["Urls:InventoryService"]);
         });
         
         builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
