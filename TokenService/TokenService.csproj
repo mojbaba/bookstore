@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.20" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
@@ -24,6 +25,7 @@
     <ProjectReference Include="..\BookStore.Authentication.Jwt.Redis\BookStore.Authentication.Jwt.Redis.csproj" />
     <ProjectReference Include="..\BookStore.EventLog.Kafka\BookStore.EventLog.Kafka.csproj" />
     <ProjectReference Include="..\BookStore.EventObserver\BookStore.EventObserver.csproj" />
+    <ProjectReference Include="..\BookStore.RedisLock\BookStore.RedisLock.csproj" />
     <ProjectReference Include="..\BookStore.Repository\BookStore.Repository.csproj" />
   </ItemGroup>
 

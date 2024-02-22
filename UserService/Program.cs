@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using UserService;
 using UserService.KafkaObserversForProducer;
 using UserService.Login;
@@ -52,10 +53,23 @@ public class Program
             });
         });
 
-        builder.Services.AddDbContext<UserServiceDbContext>((p,options) =>
+        builder.Services.AddDbContext<UserServiceDbContext>((p, options) =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
             options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+        });
+
+        builder.Services.AddSingleton(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            var connectionString = configuration.GetConnectionString("RedisConnection");
+            return ConnectionMultiplexer.Connect(connectionString);
+        });
+
+        builder.Services.AddTransient<IDatabase>(provider =>
+        {
+            var multiplexer = provider.GetRequiredService<ConnectionMultiplexer>();
+            return multiplexer.GetDatabase();
         });
 
         builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
@@ -64,11 +78,7 @@ public class Program
         builder.Services.AddTransient<ITokenService, JwtTokenService>();
         builder.Services.RegisterEventSourceObservant();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddRedisTokenValidationService(p =>
-        {
-            var configuration = p.GetRequiredService<IConfiguration>();
-            return configuration.GetConnectionString("RedisConnection");
-        });
+        builder.Services.AddRedisTokenValidationService();
 
         builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
         builder.Services.AddTransient<Confluent.Kafka.ProducerConfig>(p =>
