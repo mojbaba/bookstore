@@ -2,7 +2,7 @@ using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
 using UserService.Login;
 
-namespace UserService.KafkaObservers;
+namespace UserService.KafkaObserversForProducer;
 
 public class UserLoggedInKafkaObserver(IEventLogProducer eventLogProducer, IConfiguration configuration)
     : IEventPublishObserver

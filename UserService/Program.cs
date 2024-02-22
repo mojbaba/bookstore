@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService;
-using UserService.KafkaObservers;
+using UserService.KafkaObserversForProducer;
 using UserService.Login;
 using UserService.Logout;
 using UserService.Register;
