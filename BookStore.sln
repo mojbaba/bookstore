@@ -33,6 +33,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Contracts", "Book
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService.IntegrationTest", "TokenService.IntegrationTest\TokenService.IntegrationTest.csproj", "{B87CCC1E-00E5-479B-910F-CB030C685513}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.RedisLock", "BookStore.RedisLock\BookStore.RedisLock.csproj", "{6DA8A0A1-B31F-456C-847D-D2CF54750052}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryService.IntegrationTests", "InventoryService.IntegrationTests\InventoryService.IntegrationTests.csproj", "{CD3372F3-8D66-483E-A3A9-975CE60AF075}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,5 +106,13 @@ Global
 		{B87CCC1E-00E5-479B-910F-CB030C685513}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B87CCC1E-00E5-479B-910F-CB030C685513}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B87CCC1E-00E5-479B-910F-CB030C685513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DA8A0A1-B31F-456C-847D-D2CF54750052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DA8A0A1-B31F-456C-847D-D2CF54750052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DA8A0A1-B31F-456C-847D-D2CF54750052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DA8A0A1-B31F-456C-847D-D2CF54750052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3372F3-8D66-483E-A3A9-975CE60AF075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3372F3-8D66-483E-A3A9-975CE60AF075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3372F3-8D66-483E-A3A9-975CE60AF075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3372F3-8D66-483E-A3A9-975CE60AF075}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

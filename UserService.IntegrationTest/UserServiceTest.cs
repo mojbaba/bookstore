@@ -73,6 +73,7 @@ public class UserServiceTest
         var kafkaUserLoginMessagesTask = userLoggedInFastConsumer.ConsumeAsync(cancelationTokenSource.Token);
         var loginResponse = await client.PostAsJsonAsync("/api/user/login", loginRequest, CancellationToken.None);
         var loginResult = await loginResponse.Content.ReadFromJsonAsync<UserLoginResponse>();
+        await Task.Delay(150);
         cancelationTokenSource.Cancel();
         var kafkaUserLoginMessages = await kafkaUserLoginMessagesTask;
 
@@ -100,6 +101,7 @@ public class UserServiceTest
         // Act
         var kafkaUserLogoutMessagesTask = userLoggedOutFastConsumer.ConsumeAsync(cancelationTokenSource.Token);
         var logoutResponse = await client.PostAsync("/api/user/logout", null, CancellationToken.None);
+        await Task.Delay(150);
         cancelationTokenSource.Cancel();
         var kafkaUserLogoutMessages = await kafkaUserLogoutMessagesTask;
 

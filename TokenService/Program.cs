@@ -3,10 +3,12 @@ using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.Authentication.Jwt.Redis;
 using BookStore.EventObserver;
+using BookStore.RedisLock;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using TokenService.AddToken;
 using TokenService.BookPurchaseTokenHistoryHandlers;
 using TokenService.Entities;
@@ -64,12 +66,21 @@ public class Program
         builder.Services.AddTransient<IBookPurchaseTokenAddedHandler, BookPurchaseTokenAddedHandler>();
         builder.Services.AddTransient<IBookPurchaseTokenRemovedHandler, BookPurchaseTokenRemovedHandler>();
 
-
-        builder.Services.AddRedisTokenValidationService(p =>
+        builder.Services.AddSingleton(p =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
-            return configuration.GetConnectionString("RedisConnection");
+            var connectionString = configuration.GetConnectionString("RedisConnection");
+            return ConnectionMultiplexer.Connect(connectionString);
         });
+        
+        builder.Services.AddTransient<IDatabase>(provider =>
+        {
+            var multiplexer = provider.GetRequiredService<ConnectionMultiplexer>();
+            return multiplexer.GetDatabase();
+        });
+        
+        builder.Services.AddRedisTokenValidationService();
+        builder.Services.AddTransient<IDistributedLock, RedisDistributedLock>();
 
         builder.Services.AddAuthentication(options =>
         {
