@@ -28,4 +28,8 @@
     <ProjectReference Include="..\BookStore.Repository\BookStore.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CreateOrder\Events\" />
+  </ItemGroup>
+
 </Project>

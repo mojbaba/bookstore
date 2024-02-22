@@ -2,7 +2,7 @@ using BookStore.EventObserver;
 
 namespace OrderService.CreateOrder;
 
-public record OrderSuccessfulEvent : EventBase
+public record OrderCreatedEvent : EventBase
 {
     public string OrderId { get; set; }
     public IEnumerable<string> BookIds { get; set; } = new[] { "" };

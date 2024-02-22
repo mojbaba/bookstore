@@ -1,6 +1,7 @@
 using System.Text;
 using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.Redis;
+using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,16 @@ public class Program
                     new string[] { }
                 }
             });
+        });
+        
+        builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
+        builder.Services.AddTransient<Confluent.Kafka.ProducerConfig>(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new Confluent.Kafka.ProducerConfig
+            {
+                BootstrapServers = configuration["Kafka:BootstrapServers"]
+            };
         });
         
         builder.Services.AddDbContext<OrderServiceDbContext>((p, options) =>
