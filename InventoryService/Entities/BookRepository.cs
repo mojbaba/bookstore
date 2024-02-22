@@ -39,17 +39,28 @@ public class BookRepository(InventoryServiceDbContext dbContext) : IBookReposito
     public async Task<BookEntity> DeleteAsync(string id, CancellationToken cancellationToken)
     {
         var entity = await dbContext.Books.FirstOrDefaultAsync(a => a.Id == id);
-        
+
         if (entity == null)
         {
             throw new KeyNotFoundException($"Entity with id {id} not found");
         }
-        
+
         return dbContext.Books.Remove(entity).Entity;
     }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
         return dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<BookEntity>> GetAllBooksAsync(CancellationToken cancellationToken)
+    {
+        return await dbContext.Books.AsNoTracking().ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<BookEntity>> GetBooksByIdAsync(IEnumerable<string> ids,
+        CancellationToken cancellationToken)
+    {
+        return await dbContext.Books.AsNoTracking().Where(a => ids.Contains(a.Id)).ToListAsync(cancellationToken);
     }
 }
