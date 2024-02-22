@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Authentication.Jw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.MessageBroker.Abstractions", "BookStore.MessageBroker.Abstractions\BookStore.MessageBroker.Abstractions.csproj", "{DB00C418-390F-4D5A-9FD6-E2DE03E24570}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.EventLog.Kafka", "BookStore.EventLog.Kafka\BookStore.EventLog.Kafka.csproj", "{F091C0AF-9797-49B7-992B-1C049459E2A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +80,9 @@ Global
 		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

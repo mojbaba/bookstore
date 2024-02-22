@@ -1,12 +1,14 @@
 using System.Text;
 using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.Redis;
+using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService;
+using UserService.KafkaObservers;
 using UserService.Login;
 using UserService.Logout;
 using UserService.Register;
@@ -68,7 +70,20 @@ public class Program
             return configuration.GetConnectionString("RedisConnection");
         });
 
+        builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
+        builder.Services.AddTransient<Confluent.Kafka.ProducerConfig>(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new Confluent.Kafka.ProducerConfig
+            {
+                BootstrapServers = configuration["Kafka:BootstrapServers"]
+            };
+        });
+
         builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutObserver>();
+        builder.Services.AddSingleton<IEventPublishObserver, UserRegisteredKafkaObserver>();
+        builder.Services.AddSingleton<IEventPublishObserver, UserLoggedInKafkaObserver>();
+        builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutKafkaObserver>();
 
         builder.Services.AddAuthentication(options =>
         {
