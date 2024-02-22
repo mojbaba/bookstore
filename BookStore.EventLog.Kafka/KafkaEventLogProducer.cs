@@ -13,9 +13,10 @@ public class KafkaEventLogProducer : IEventLogProducer
         _producer = new ProducerBuilder<string, string>(producerConfig).Build();
     }
     
-    public Task ProduceAsync<TEvent>(string channelName, IEvent @event, CancellationToken cancellationToken)
+    public Task ProduceAsync<TEvent>(string channelName, TEvent @event, CancellationToken cancellationToken)
+        where TEvent: IEvent
     {
-        var eventJson = JsonSerializer.Serialize(@event);
+        var eventJson = JsonSerializer.Serialize<TEvent>(@event);
         return _producer.ProduceAsync(channelName, new Message<string, string>
         {
             Key = @event.EventId.ToString(),

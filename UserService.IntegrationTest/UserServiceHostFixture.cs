@@ -91,11 +91,11 @@ public class UserServiceHostFixture : WebApplicationFactory<Program>, IAsyncLife
             var topicsToCreate = new TopicSpecification[]
             {
                 new TopicSpecification
-                    { Name = Configuration["Kafka:UserLoginTopic"], ReplicationFactor = 1, NumPartitions = 1 },
+                    { Name = Configuration["Kafka:Topics:UserLoginTopic"], ReplicationFactor = 1, NumPartitions = 1 },
                 new TopicSpecification
-                    { Name = Configuration["Kafka:UserLogoutTopic"], ReplicationFactor = 1, NumPartitions = 1 },
+                    { Name = Configuration["Kafka:Topics:UserLogoutTopic"], ReplicationFactor = 1, NumPartitions = 1 },
                 new TopicSpecification
-                    { Name = Configuration["Kafka:UserRegisterTopic"], ReplicationFactor = 1, NumPartitions = 1 }
+                    { Name = Configuration["Kafka:Topics:UserRegisterTopic"], ReplicationFactor = 1, NumPartitions = 1 }
             };
 
             var existingTopics = kafkaAdminClient.GetMetadata(TimeSpan.FromMinutes(1));
