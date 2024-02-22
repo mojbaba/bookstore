@@ -9,8 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Logout\Events\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
@@ -32,8 +33,10 @@
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Authentication.Jwt.Redis\BookStore.Authentication.Jwt.Redis.csproj" />
     <ProjectReference Include="..\BookStore.Authentication.Jwt\BookStore.Authentication.Jwt.csproj" />
+    <ProjectReference Include="..\BookStore.Contracts\BookStore.Contracts.csproj" />
     <ProjectReference Include="..\BookStore.EventLog.Kafka\BookStore.EventLog.Kafka.csproj" />
     <ProjectReference Include="..\BookStore.EventObserver\BookStore.EventObserver.csproj" />
+    <ProjectReference Include="..\BookStore.Repository\BookStore.Repository.csproj" />
   </ItemGroup>
 
 </Project>

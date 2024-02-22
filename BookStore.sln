@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryService", "Invento
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{8CDDEF05-49FC-48AB-8AFD-18F012A8E241}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{C0458DFC-C4B3-4DB2-AE3C-FE425928371A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService", "TokenService\TokenService.csproj", "{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.IntegrationTest", "UserService.IntegrationTest\UserService.IntegrationTest.csproj", "{6AA24FA0-3150-4067-82D2-706F18F6C9EB}"
@@ -23,11 +21,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.EventObserver", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Authentication.Jwt.Redis", "BookStore.Authentication.Jwt.Redis\BookStore.Authentication.Jwt.Redis.csproj", "{D1F7B451-6BED-4A92-9EE1-B2C02CE7557A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.MessageBroker.Abstractions", "BookStore.MessageBroker.Abstractions\BookStore.MessageBroker.Abstractions.csproj", "{DB00C418-390F-4D5A-9FD6-E2DE03E24570}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.EventLog.Kafka", "BookStore.EventLog.Kafka\BookStore.EventLog.Kafka.csproj", "{F091C0AF-9797-49B7-992B-1C049459E2A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.TestingTools", "BookStore.TestingTools\BookStore.TestingTools.csproj", "{9E7D4FF9-A87E-4D62-9962-AA389C4FB944}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Repository", "BookStore.Repository\BookStore.Repository.csproj", "{D07A367A-2E04-4949-84EE-2547AF3DB186}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Authentication.Jwt.KafkaLoggedOut", "BookStore.Authentication.Jwt.KafkaLoggedOut\BookStore.Authentication.Jwt.KafkaLoggedOut.csproj", "{C06EE639-AFC0-460D-863D-E67B95B95719}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Contracts", "BookStore.Contracts\BookStore.Contracts.csproj", "{818E5754-90F5-4A3A-97DF-4947876531FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService.IntegrationTest", "TokenService.IntegrationTest\TokenService.IntegrationTest.csproj", "{B87CCC1E-00E5-479B-910F-CB030C685513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +54,6 @@ Global
 		{8CDDEF05-49FC-48AB-8AFD-18F012A8E241}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CDDEF05-49FC-48AB-8AFD-18F012A8E241}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CDDEF05-49FC-48AB-8AFD-18F012A8E241}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0458DFC-C4B3-4DB2-AE3C-FE425928371A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0458DFC-C4B3-4DB2-AE3C-FE425928371A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0458DFC-C4B3-4DB2-AE3C-FE425928371A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0458DFC-C4B3-4DB2-AE3C-FE425928371A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D39761CB-9D3F-4B4E-8837-A9AFCFB5AB19}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -78,10 +78,6 @@ Global
 		{D1F7B451-6BED-4A92-9EE1-B2C02CE7557A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1F7B451-6BED-4A92-9EE1-B2C02CE7557A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1F7B451-6BED-4A92-9EE1-B2C02CE7557A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB00C418-390F-4D5A-9FD6-E2DE03E24570}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F091C0AF-9797-49B7-992B-1C049459E2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,5 +86,21 @@ Global
 		{9E7D4FF9-A87E-4D62-9962-AA389C4FB944}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E7D4FF9-A87E-4D62-9962-AA389C4FB944}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E7D4FF9-A87E-4D62-9962-AA389C4FB944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D07A367A-2E04-4949-84EE-2547AF3DB186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D07A367A-2E04-4949-84EE-2547AF3DB186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D07A367A-2E04-4949-84EE-2547AF3DB186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D07A367A-2E04-4949-84EE-2547AF3DB186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06EE639-AFC0-460D-863D-E67B95B95719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06EE639-AFC0-460D-863D-E67B95B95719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06EE639-AFC0-460D-863D-E67B95B95719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06EE639-AFC0-460D-863D-E67B95B95719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{818E5754-90F5-4A3A-97DF-4947876531FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{818E5754-90F5-4A3A-97DF-4947876531FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{818E5754-90F5-4A3A-97DF-4947876531FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{818E5754-90F5-4A3A-97DF-4947876531FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B87CCC1E-00E5-479B-910F-CB030C685513}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

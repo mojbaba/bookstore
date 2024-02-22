@@ -1,13 +1,5 @@
 namespace UserService;
 
-public interface IUserRepository
+public interface IUserRepository : BookStore.Repository.IRepository<UserEntity>
 {
-    Task<UserEntity?> GetUserAsync(string email, CancellationToken cancellationToken);
-    Task<UserEntity?> GetUserAsync(Guid id, CancellationToken cancellationToken);
-    Task<UserEntity> CreateUserAsync(UserEntity user, CancellationToken cancellationToken);
-    Task<UserEntity> UpdateUserAsync(UserEntity user, CancellationToken cancellationToken);
-    Task<UserEntity> DeleteUserAsync(Guid id, CancellationToken cancellationToken);
-    Task<UserEntity> DeleteUserAsync(string email, CancellationToken cancellationToken);
-    
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

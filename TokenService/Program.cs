@@ -1,44 +1,134 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Text;
+using BookStore.Authentication.Jwt;
+using BookStore.Authentication.Jwt.KafkaLoggedOut;
+using BookStore.Authentication.Jwt.Redis;
+using BookStore.EventObserver;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using TokenService.AddToken;
+using TokenService.BookPurchaseTokenHistoryHandlers;
+using TokenService.Entities;
+using TokenService.RemoveToken;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+namespace TokenService;
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-app.UseHttpsRedirection();
+        // Add services to the container.
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description =
+                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+        });
+        
+        builder.Services.AddDbContext<BookPurchaseTokenDbContext>((p, options) =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+        }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+        
+        builder.Services.AddTransient<IBookPurchaseTokenRepository, BookPurchaseTokenRepository>();
+        builder.Services.AddTransient<IBookPurchaseTokenHistoryRepository, BookPurchaseTokenHistoryRepository>();
+        builder.Services.AddTransient<IAddBookPurchaseTokenService, AddBookPurchaseTokenService>();
+        builder.Services.AddTransient<IRemoveBookPurchaseTokenService, RemoveBookPurchaseTokenService>();
+        builder.Services.AddTransient<IBookPurchaseTokenAddedHandler, BookPurchaseTokenAddedHandler>();
+        builder.Services.AddTransient<IBookPurchaseTokenRemovedHandler, BookPurchaseTokenRemovedHandler>();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+        builder.Services.AddRedisTokenValidationService(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return configuration.GetConnectionString("RedisConnection");
+        });
 
-app.Run();
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            var configuration = builder.Configuration;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["Jwt:Issuer"],
+                ValidAudience = configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]))
+            };
+        });
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        builder.Services.RegisterEventSourceObservant();
+
+        builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenAddedObserverForHistory>();
+        builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenRemovedObserverForHistory>();
+
+        builder.Services.AddKafkaUserLoggedOutHandler(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new KafkaUserLoggedOutOptions
+            {
+                GroupId = configuration["Kafka:GroupId"],
+                BootstrapServers = configuration["Kafka:BootstrapServers"],
+                Topic = configuration["Kafka:Topics:UserLogoutTopic"]
+            };
+        });
+
+        builder.Services.AddControllers();
+
+        var app = builder.Build();
+
+        app.SubscribeObservers();
+
+        app.UseMiddleware<JwtValidationMiddleware>();
+
+        app.MapControllers();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+
+
+        app.Run();
+    }
 }

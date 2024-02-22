@@ -63,7 +63,7 @@ public class Program
         builder.Services.AddScoped<IUserLogoutService, UserLogoutService>();
         builder.Services.AddTransient<ITokenService, JwtTokenService>();
         builder.Services.RegisterEventSourceObservant();
-        builder.Services.AddScoped<IUserRepository, EntityFrameworkUserRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddRedisTokenValidationService(p =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();

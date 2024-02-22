@@ -9,7 +9,7 @@ public class UserRegisterService(IUserRepository repository, IEventPublishObserv
     public async Task<UserRegisterationResponse> RegisterAsync(UserRegisterationRequest request,
         CancellationToken cancellationToken)
     {
-        var user = await repository.GetUserAsync(request.Email, cancellationToken);
+        var user = await repository.GetAsync(request.Email, cancellationToken);
         if (user != null)
         {
             throw new UserRegisterException("Email is already registered");
@@ -27,7 +27,7 @@ public class UserRegisterService(IUserRepository repository, IEventPublishObserv
             Salt = randomSalt
         };
 
-        var createdUser = await repository.CreateUserAsync(newUser, cancellationToken);
+        var createdUser = await repository.CreateAsync(newUser, cancellationToken);
 
         await repository.SaveChangesAsync(cancellationToken);
 
