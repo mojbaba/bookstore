@@ -6,12 +6,7 @@ internal class EventSourcePublish : IEventPublishObservant
 
     public Task PublishAsync(EventBase @event)
     {
-        foreach (var observer in _observers)
-        {
-            observer.OnEventPublished(@event);
-        }
-
-        return Task.CompletedTask;
+        return Task.WhenAll(_observers.Select(ob => ob.OnEventPublished(@event)));
     }
 
     public void Subscribe(IEventPublishObserver observer)

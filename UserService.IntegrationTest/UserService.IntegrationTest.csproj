@@ -10,10 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
         <PackageReference Include="coverlet.collector" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
         <PackageReference Include="Moq" Version="4.20.70" />
+        <PackageReference Include="TestContainers.Kafka" Version="3.7.0" />
         <PackageReference Include="TestContainers.PostgreSql" Version="3.7.0" />
         <PackageReference Include="TestContainers.Redis" Version="3.7.0" />
         <PackageReference Include="xunit" Version="2.5.3" />
@@ -25,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BookStore.TestingTools\BookStore.TestingTools.csproj" />
       <ProjectReference Include="..\UserService\UserService.csproj" />
     </ItemGroup>
 

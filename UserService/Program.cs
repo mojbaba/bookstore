@@ -1,12 +1,14 @@
 using System.Text;
 using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.Redis;
+using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService;
+using UserService.KafkaObserversForProducer;
 using UserService.Login;
 using UserService.Logout;
 using UserService.Register;
@@ -50,10 +52,11 @@ public class Program
             });
         });
 
-        var configuration = builder.Configuration;
-
-        builder.Services.AddDbContext<UserServiceDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection")));
+        builder.Services.AddDbContext<UserServiceDbContext>((p,options) =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+        });
 
         builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
         builder.Services.AddScoped<IUserLoginService, UserLoginService>();
@@ -61,9 +64,26 @@ public class Program
         builder.Services.AddTransient<ITokenService, JwtTokenService>();
         builder.Services.RegisterEventSourceObservant();
         builder.Services.AddScoped<IUserRepository, EntityFrameworkUserRepository>();
-        builder.Services.AddRedisTokenValidationService(configuration.GetConnectionString("RedisConnection"));
+        builder.Services.AddRedisTokenValidationService(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return configuration.GetConnectionString("RedisConnection");
+        });
+
+        builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
+        builder.Services.AddTransient<Confluent.Kafka.ProducerConfig>(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new Confluent.Kafka.ProducerConfig
+            {
+                BootstrapServers = configuration["Kafka:BootstrapServers"]
+            };
+        });
 
         builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutObserver>();
+        builder.Services.AddSingleton<IEventPublishObserver, UserRegisteredKafkaObserver>();
+        builder.Services.AddSingleton<IEventPublishObserver, UserLoggedInKafkaObserver>();
+        builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutKafkaObserver>();
 
         builder.Services.AddAuthentication(options =>
         {
@@ -71,6 +91,7 @@ public class Program
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
+            var configuration = builder.Configuration;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,

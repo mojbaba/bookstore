@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Authentication.Jwt.Redis\BookStore.Authentication.Jwt.Redis.csproj" />
     <ProjectReference Include="..\BookStore.Authentication.Jwt\BookStore.Authentication.Jwt.csproj" />
+    <ProjectReference Include="..\BookStore.EventLog.Kafka\BookStore.EventLog.Kafka.csproj" />
     <ProjectReference Include="..\BookStore.EventObserver\BookStore.EventObserver.csproj" />
   </ItemGroup>
 
