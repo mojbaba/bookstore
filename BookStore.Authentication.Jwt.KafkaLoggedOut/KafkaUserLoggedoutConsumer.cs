@@ -20,7 +20,12 @@ public class KafkaUserLoggedoutConsumer : BackgroundService
         _userLoggedOutHandler = userLoggedOutHandler;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        return Task.Factory.StartNew(()=>StartConsuming(stoppingToken), stoppingToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+    }
+
+    private void StartConsuming(CancellationToken stoppingToken)
     {
         var config = new ConsumerConfig
         {
@@ -32,16 +37,14 @@ public class KafkaUserLoggedoutConsumer : BackgroundService
         using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
 
         consumer.Subscribe(_topic);
-
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
                 var consumeResult = consumer.Consume(stoppingToken);
-                var userLoggedOutEvent = JsonSerializer.Deserialize<UserLoggedOutEvent>(consumeResult.Message.Value);
-                await _userLoggedOutHandler.Handle(userLoggedOutEvent, stoppingToken);
-                Console.WriteLine(
-                    $"Consumed message '{consumeResult.Message.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
+                var userLoggedOutEvent =
+                    JsonSerializer.Deserialize<UserLoggedOutEvent>(consumeResult.Message.Value);
+                _userLoggedOutHandler.Handle(userLoggedOutEvent, stoppingToken).Wait(stoppingToken);
             }
             catch (OperationCanceledException)
             {

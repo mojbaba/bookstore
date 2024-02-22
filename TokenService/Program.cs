@@ -95,16 +95,16 @@ public class Program
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenAddedObserverForHistory>();
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenRemovedObserverForHistory>();
 
-        // builder.Services.AddKafkaUserLoggedOutHandler(p =>
-        // {
-        //     var configuration = p.GetRequiredService<IConfiguration>();
-        //     return new KafkaUserLoggedOutOptions
-        //     {
-        //         GroupId = configuration["Kafka:GroupId"],
-        //         BootstrapServers = configuration["Kafka:BootstrapServers"],
-        //         Topic = configuration["Kafka:Topics:UserLogoutTopic"]
-        //     };
-        // });
+        builder.Services.AddKafkaUserLoggedOutHandler(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new KafkaUserLoggedOutOptions
+            {
+                GroupId = configuration["Kafka:GroupId"],
+                BootstrapServers = configuration["Kafka:BootstrapServers"],
+                Topic = configuration["Kafka:Topics:UserLogoutTopic"]
+            };
+        });
 
         builder.Services.AddControllers();
 
