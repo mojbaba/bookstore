@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace UserService;
 
-public class EntityFrameworkUserRepository(UserServiceDbContext dbContext) : IUserRepository
+public class UserRepository(UserServiceDbContext dbContext) : IUserRepository
 {
     public Task<UserEntity?> GetAsync(string email, CancellationToken cancellationToken)
     {

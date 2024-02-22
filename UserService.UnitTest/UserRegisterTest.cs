@@ -31,7 +31,7 @@ public class UserRegisterTest
         Assert.Equal(request.Email, result.Email);
         
         eventPublishObservant.Verify(a => a.PublishAsync(It.IsAny<UserRegisteredEvent>()), Times.Once);
-        repository.Verify(repo => repo.CreateUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()), Times.Once);
+        repository.Verify(repo => repo.CreateAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()), Times.Once);
         repository.Verify(repo => repo.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

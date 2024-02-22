@@ -20,7 +20,7 @@ public class UserLoginTest
         var eventPublishObservant = new Mock<IEventPublishObservant>();
         var tokenService = new Mock<ITokenService>();
 
-        repository.Setup(repo => repo.GetUserAsync(request.Email, It.IsAny<CancellationToken>()))
+        repository.Setup(repo => repo.GetAsync(request.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new UserEntity
             {
                 Id = Guid.NewGuid().ToString(),
