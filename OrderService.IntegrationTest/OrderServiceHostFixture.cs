@@ -89,7 +89,7 @@ public class OrderServiceHostFixture : WebApplicationFactory<Program>, IAsyncLif
     public async Task DisposeAsync()
     {
         await Task.WhenAll(Redis.StopAsync(), Postgresql.StopAsync(), Kafka.StopAsync());
-
+        
         await Redis.DisposeAsync();
         await Postgresql.DisposeAsync();
         await Kafka.DisposeAsync();
