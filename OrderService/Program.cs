@@ -135,7 +135,7 @@ public class Program
         app.UseMiddleware<JwtValidationMiddleware>();
 
         app.UseAuthentication();
-        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 
