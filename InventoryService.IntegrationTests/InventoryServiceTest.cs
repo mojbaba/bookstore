@@ -53,16 +53,12 @@ public class InventoryServiceTest
         response.EnsureSuccessStatusCode();
         Assert.NotNull(result);
         Assert.NotEmpty(result.BookId);
-
-        var bookQueryRequest = new QueryBookRequest();
-        var bookQueryResponse = await client.PostAsJsonAsync("/api/query-books/query", bookQueryRequest);
+        
+        var bookQueryResponse = await client.GetAsync("/api/query-books/query");
         var content = await bookQueryResponse.Content.ReadAsStringAsync();
         var bookQueryResult = await bookQueryResponse.Content.ReadFromJsonAsync<QueryBookResponse>();
         
         Assert.Contains(book.Title, bookQueryResult.Books.Select(x => x.Title));
-        
-        
-        
         
         // Act
         var removeBookResponse = await client.PostAsJsonAsync("/api/admin/remove-book",

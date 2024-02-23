@@ -6,6 +6,7 @@ using BookStore.EventLog.Kafka;
 using BookStore.RedisLock;
 using InventoryService.AdminOperations;
 using InventoryService.Entities;
+using InventoryService.QueryBooks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -66,6 +67,8 @@ public class Program
             configuration.GetSection("Kafka").Bind(kafkaOptions);
             return kafkaOptions;
         });
+
+        builder.Services.AddTransient<IBookQueryHandler, BookQueryHandler>();
 
         builder.Services.AddControllers();
         
