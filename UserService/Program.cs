@@ -21,9 +21,12 @@ public class Program
     public static int Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Configuration.AddJsonFile("appsettings.json");
+        builder.Configuration.AddEnvironmentVariables();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Add services to the container.
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
