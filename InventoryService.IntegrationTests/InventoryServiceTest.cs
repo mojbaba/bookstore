@@ -3,6 +3,8 @@ using System.Net.Http.Json;
 using InventoryService.AdminAddBook.Models;
 using InventoryService.Entities;
 using InventoryService.IntegrationTest;
+using InventoryService.QueryBooks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserService;
 
@@ -28,10 +30,21 @@ public class InventoryServiceTest
         {
             Title = "Test Book",
             Author = "Test Author",
-            Price = 10
+            Price = 10,
+            Amount = 15
         };
 
         // Act
+        var config = _inventoryServiceHostFixture.Services.GetRequiredService<IConfiguration>();
+        var tokenService = new JwtTokenService(config);
+
+        var userId = Guid.NewGuid().ToString();
+        var userEmail = "user@example.com";
+        
+        var token = tokenService.GenerateToken(userId, userEmail);
+        
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
         var response = await client.PostAsJsonAsync("/api/admin/add-book", book);
         var responseContent = await response.Content.ReadAsStringAsync();
         var result = await response.Content.ReadFromJsonAsync<AdminAddBookResponse>();
@@ -40,6 +53,15 @@ public class InventoryServiceTest
         response.EnsureSuccessStatusCode();
         Assert.NotNull(result);
         Assert.NotEmpty(result.BookId);
+
+        var bookQueryRequest = new QueryBookRequest();
+        var bookQueryResponse = await client.PostAsJsonAsync("/api/query-books/query", bookQueryRequest);
+        var content = await bookQueryResponse.Content.ReadAsStringAsync();
+        var bookQueryResult = await bookQueryResponse.Content.ReadFromJsonAsync<QueryBookResponse>();
+        
+        Assert.Contains(book.Title, bookQueryResult.Books.Select(x => x.Title));
+        
+        
         
         
         // Act

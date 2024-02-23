@@ -1,3 +1,4 @@
+using System.Text;
 using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.Authentication.Jwt.Redis;
@@ -5,7 +6,9 @@ using BookStore.EventLog.Kafka;
 using BookStore.RedisLock;
 using InventoryService.AdminOperations;
 using InventoryService.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 
 namespace InventoryService;
@@ -65,6 +68,25 @@ public class Program
         });
 
         builder.Services.AddControllers();
+        
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            var configuration = builder.Configuration;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["Jwt:Issuer"],
+                ValidAudience = configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]))
+            };
+        });
 
         var app = builder.Build();
 

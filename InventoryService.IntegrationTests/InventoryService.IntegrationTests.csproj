@@ -24,6 +24,7 @@
     <ItemGroup>
       <ProjectReference Include="..\BookStore.TestingTools\BookStore.TestingTools.csproj" />
       <ProjectReference Include="..\InventoryService\InventoryService.csproj" />
+      <ProjectReference Include="..\UserService\UserService.csproj" />
     </ItemGroup>
 
 </Project>
