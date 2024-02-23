@@ -9,7 +9,7 @@ namespace BookStore.TestingTools;
 
 public static class TestInfrastructureHelper
 {
-    public  static async Task<PostgreSqlContainer> CreateDatabase(IConfiguration configuration)
+    public static async Task<PostgreSqlContainer> CreateDatabase(IConfiguration configuration)
     {
         var postgresql = new PostgreSqlBuilder()
             .WithImage("postgres:13")
@@ -24,6 +24,7 @@ public static class TestInfrastructureHelper
 
         return postgresql;
     }
+
     public static async Task<RedisContainer> CreateRedis(IConfiguration configuration)
     {
         var redis = new RedisBuilder()
@@ -39,6 +40,7 @@ public static class TestInfrastructureHelper
 
         return redis;
     }
+
     public static async Task<KafkaContainer> CreateKafka(IConfiguration configuration)
     {
         var kafka = new KafkaBuilder()
@@ -60,15 +62,22 @@ public static class TestInfrastructureHelper
 
         try
         {
-            var topicsToCreate = new TopicSpecification[]
+            var topicNames = new[]
             {
-                new TopicSpecification
-                    { Name = configuration["Kafka:Topics:UserLoginTopic"], ReplicationFactor = 1, NumPartitions = 1 },
-                new TopicSpecification
-                    { Name = configuration["Kafka:Topics:UserLogoutTopic"], ReplicationFactor = 1, NumPartitions = 1 },
-                new TopicSpecification
-                    { Name = configuration["Kafka:Topics:UserRegisterTopic"], ReplicationFactor = 1, NumPartitions = 1 }
+                "UserLogoutTopic",
+                "UserLoginTopic",
+                "UserRegisterTopic",
+                "OrderFailedTopic",
+                "OrderCreatedTopic",
+                "BalanceDeductedTopic",
+                "BalanceDeductionFailedTopic",
+                "BooksPackedTopic",
+                "BooksPackingFailedTopic"
             };
+
+            var topicsToCreate = topicNames.Select(name => new TopicSpecification
+                { Name = configuration[$"Kafka:Topics:{name}"], ReplicationFactor = 1, NumPartitions = 1 })
+                .Where(a=> a.Name != null);
 
             var existingTopics = kafkaAdminClient.GetMetadata(TimeSpan.FromMinutes(1));
             var existingTopicNames = existingTopics.Topics.Select(topic => topic.Topic);

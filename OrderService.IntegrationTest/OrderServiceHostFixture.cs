@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Testcontainers.Kafka;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 using OrderService;
+using OrderService.CreateOrder;
 using OrderService.Entities;
 
 
@@ -33,7 +35,12 @@ public class OrderServiceHostFixture : WebApplicationFactory<Program>, IAsyncLif
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureServices(RegisterConfiguration);
+        builder.ConfigureServices(services =>
+        {
+            RegisterConfiguration(services);
+            RegisterInventoryClient(services);
+        });
+        
         base.ConfigureWebHost(builder);
     }
 
@@ -55,6 +62,18 @@ public class OrderServiceHostFixture : WebApplicationFactory<Program>, IAsyncLif
         serviceCollection.AddSingleton<IConfiguration>(Configuration);
     }
 
+    private void RegisterInventoryClient(IServiceCollection serviceCollection)
+    {
+        var descriptor = serviceCollection.Where(d => d.ServiceType == typeof(IInventoryClient));
+
+        descriptor.ToList().ForEach(a =>
+        {
+            serviceCollection.Remove(a);
+        });
+
+        serviceCollection.AddSingleton<IInventoryClient>(InventoryClientMock.Object);
+    }
+
     public PostgreSqlContainer Postgresql { get; private set; }
 
     public RedisContainer Redis { get; private set; }
@@ -64,6 +83,8 @@ public class OrderServiceHostFixture : WebApplicationFactory<Program>, IAsyncLif
     public IConfiguration Configuration { get; private set; } = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .Build();
+
+    public Mock<IInventoryClient> InventoryClientMock { get; set; } = new Mock<IInventoryClient>();
 
     public async Task DisposeAsync()
     {
