@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace OrderService.CreateOrder;
 
 [ApiController]
+[Authorize]
 [Route("api/order")]
 public class CreateOrderController(ICreateOrderService createOrderService) : ControllerBase
 {
     [HttpPost("create")]
-    // [Authorize]
     public async Task<IActionResult> CreateOrder(CreateOrderControllerRequest controllerRequest)
     {
         if (ModelState.IsValid == false)
