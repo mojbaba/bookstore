@@ -43,6 +43,7 @@ public class UserServiceTest
         var kafkaUserRegisterMessagesTask = userRegisteredFastConsumer.ConsumeAsync(cancelationTokenSource.Token);
         var registerResponse = await client.PostAsJsonAsync("/api/user/register", request, CancellationToken.None);
         var registerResult = await registerResponse.Content.ReadFromJsonAsync<UserRegisterationResponse>();
+        await Task.Delay(150);
         cancelationTokenSource.Cancel();
         var kafkaUserRegisterMessages = await kafkaUserRegisterMessagesTask;
         

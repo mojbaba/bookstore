@@ -6,18 +6,17 @@ namespace OrderService.CreateOrder;
 
 [ApiController]
 [Route("api/order")]
-[Authorize]
 public class CreateOrderController(ICreateOrderService createOrderService) : ControllerBase
 {
- 
     [HttpPost("create")]
+    // [Authorize]
     public async Task<IActionResult> CreateOrder(CreateOrderControllerRequest controllerRequest)
     {
-        if(ModelState.IsValid == false)
+        if (ModelState.IsValid == false)
         {
             return BadRequest();
         }
-        
+
         var jwtTokenInHeader = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
         var request = new CreateOrderRequest()

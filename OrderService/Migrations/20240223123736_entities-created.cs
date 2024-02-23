@@ -20,7 +20,8 @@ namespace OrderService.Migrations
                     Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     IsPaymentProcessed = table.Column<bool>(type: "boolean", nullable: false),
-                    IsInventoryProcessed = table.Column<bool>(type: "boolean", nullable: false)
+                    IsInventoryProcessed = table.Column<bool>(type: "boolean", nullable: false),
+                    FailReason = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

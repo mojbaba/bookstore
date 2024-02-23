@@ -14,7 +14,8 @@ public class CreateOrderService(
     {
         var order = new OrderEntity
         {
-            Status = OrderStatus.Processing
+            Status = OrderStatus.Processing,
+            UserId = request.UserId
         };
 
         var queryBooksRequest = new QueryBookRequest

@@ -24,7 +24,8 @@ public class OrderEntity
     public bool IsPaymentProcessed { get; set; }
 
     public bool IsInventoryProcessed { get; set; }
-    public string FailReason { get; set; }
+    
+    public string? FailReason { get; set; }
 }
 
 public class OrderItemEntity

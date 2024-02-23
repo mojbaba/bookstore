@@ -52,12 +52,6 @@ public class Program
             });
         });
 
-        builder.Services.AddHttpClient<IInventoryClient>((provider, client) =>
-        {
-            var configuration = provider.GetRequiredService<IConfiguration>();
-            client.BaseAddress = new Uri(configuration["Urls:InventoryService"]);
-        });
-        
         builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
         builder.Services.AddTransient<Confluent.Kafka.ProducerConfig>(p =>
         {
@@ -67,13 +61,13 @@ public class Program
                 BootstrapServers = configuration["Kafka:BootstrapServers"]
             };
         });
-        
+
         builder.Services.AddDbContext<OrderServiceDbContext>((p, options) =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
             options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
-        });
-        
+        }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+
         builder.Services.AddSingleton(p =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
@@ -86,10 +80,10 @@ public class Program
             var multiplexer = provider.GetRequiredService<ConnectionMultiplexer>();
             return multiplexer.GetDatabase();
         });
-        
+
         builder.Services.RegisterEventSourceObservant();
         builder.Services.AddRedisTokenValidationService();
-        
+
         builder.Services.AddTransient(provider =>
         {
             var configuration = provider.GetRequiredService<IConfiguration>();
@@ -97,7 +91,7 @@ public class Program
             configuration.GetSection("Kafka").Bind(kafkaOptions);
             return kafkaOptions;
         });
-        
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -119,6 +113,7 @@ public class Program
 
         builder.Services.AddInventoryServiceKafkaEvents();
         builder.Services.AddTokenPurchaseServiceKafkaEvents();
+        builder.Services.AddEntities();
 
         builder.Services.AddCreateOrderServices();
 
@@ -132,15 +127,17 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
+
         app.SubscribeObservers();
 
         app.UseMiddleware<JwtValidationMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthentication();
-        
+
         app.MapControllers();
+
+        app.UseHttpsRedirection();
         
         app.Run();
     }
