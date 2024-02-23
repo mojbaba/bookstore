@@ -1,12 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TokenService.Entities;
 
 public enum BookPurchaseTokenHistoryType
 {
     Add,
-    Remove
+    Remove,
+    OrderExecuted,
+    OrderRefunded
 }
 
 public class BookPurchaseTokenHistoryEntity
@@ -16,6 +19,8 @@ public class BookPurchaseTokenHistoryEntity
     [MaxLength(200)]
     [ForeignKey(nameof(BookPurchaseToken))]
     public string UserId { get; set; }
+    
+    [MaxLength(200)] public string? OrderId { get; set; }
     
     public virtual BookPurchaseTokenEntity BookPurchaseToken { get; set; }
 
