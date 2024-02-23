@@ -134,10 +134,13 @@ public class OrderServiceTest
 
         await eventLogProducer.ProduceAsync(kafkaOptions.Topics.BalanceDeductedTopic, balanceDeductedSucceededEvent,
             CancellationToken.None);
+
+        await Task.Delay(1000);
+        
         await eventLogProducer.ProduceAsync(kafkaOptions.Topics.BooksPackedTopic, orderedBooksPackedEvent,
             CancellationToken.None);
 
-        await Task.Delay(200);
+        await Task.Delay(3000);
 
         var orderRepository = _orderServiceHostFixture.Services.GetRequiredService<IOrderRepository>();
         var order = await orderRepository.GetAsync(createOrderResponse.OrderId, CancellationToken.None);
