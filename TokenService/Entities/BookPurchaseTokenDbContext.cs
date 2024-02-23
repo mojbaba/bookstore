@@ -17,6 +17,13 @@ public class BookPurchaseTokenDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BookPurchaseTokenHistoryEntity>(entity =>
+        {
+            entity.HasIndex(a => a.UserId);
+            entity.HasIndex(a => a.OrderId);
+        });
+
+
         base.OnModelCreating(modelBuilder);
     }
 }

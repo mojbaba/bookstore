@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TokenService.Entities;
@@ -11,9 +12,11 @@ using TokenService.Entities;
 namespace TokenService.Migrations
 {
     [DbContext(typeof(BookPurchaseTokenDbContext))]
-    partial class BookPurchaseTokenDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240223134248_add-order-id-to-token-history")]
+    partial class addorderidtotokenhistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
