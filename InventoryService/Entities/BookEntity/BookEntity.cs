@@ -10,4 +10,6 @@ public class BookEntity
     public long Price { get; set; }
 
     public int Amount { get; set; }
+
+    public IEnumerable<BookHistoryEntity> History { get; set; } = new BookHistoryEntity[] { };
 }
