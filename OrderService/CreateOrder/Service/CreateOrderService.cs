@@ -50,6 +50,7 @@ public class CreateOrderService(
         {
             OrderId = order.Id,
             BookIds = order.Items.Select(item => item.BookId),
+            UserId = request.UserId,
             TotalPrice = totalPrice
         };
         
