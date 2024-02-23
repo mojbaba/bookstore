@@ -25,11 +25,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddDbContext<InventoryServiceDbContext>((p, options) =>
-        {
-            var configuration = p.GetRequiredService<IConfiguration>();
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
-        }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+        builder.Services.AddEntites();
 
         builder.Services.AddSingleton(p =>
         {
