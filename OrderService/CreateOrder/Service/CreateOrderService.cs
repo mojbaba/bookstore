@@ -19,7 +19,8 @@ public class CreateOrderService(
 
         var queryBooksRequest = new QueryBookRequest
         {
-            BookIds = request.BookIds
+            BookIds = request.BookIds,
+            AuthenticationToken = request.AuthenticationToken
         };
         
         var queryBookResponse = await inventoryClient.QueryBooksAsync(queryBooksRequest, cancellationToken);
