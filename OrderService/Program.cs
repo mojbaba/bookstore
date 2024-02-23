@@ -120,6 +120,8 @@ public class Program
         builder.Services.AddInventoryServiceKafkaEvents();
         builder.Services.AddTokenPurchaseServiceKafkaEvents();
 
+        builder.Services.AddCreateOrderServices();
+
         builder.Services.AddControllers();
 
         var app = builder.Build();
