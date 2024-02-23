@@ -1,3 +1,5 @@
+using BookStore.EventObserver;
+
 namespace OrderService.TokenPurchaseServiceKafkaEvents;
 
 public static class ServiceRegisteration
@@ -9,7 +11,10 @@ public static class ServiceRegisteration
 
         services.AddHostedService<KafkaBalanceDeductedSucceededEventConsumer>();
         services.AddHostedService<KafkaBalanceDeductionFailedEventConsumer>();
-        
+
+        services.AddSingleton<IEventPublishObserver, BalanceDeductedSucceededEventObserver>();
+        services.AddSingleton<IEventPublishObserver, BalanceDeductionFailedEventObserver>();
+
         return services;
     }
 }
