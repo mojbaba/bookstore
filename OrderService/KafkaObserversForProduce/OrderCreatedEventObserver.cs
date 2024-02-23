@@ -4,7 +4,7 @@ using OrderService.CreateOrder;
 
 namespace OrderService.KafkaObserversForProduce;
 
-public class OrderCreatedEventObserver(IEventLogProducer eventLogProducer, IConfiguration configuration)
+public class OrderCreatedEventObserver(IEventLogProducer eventLogProducer, KafkaOptions kafkaOptions)
     : IEventPublishObserver
 {
     public Task OnEventPublished(EventBase @event)
@@ -14,7 +14,7 @@ public class OrderCreatedEventObserver(IEventLogProducer eventLogProducer, IConf
             return Task.CompletedTask;
         }
 
-        return eventLogProducer.ProduceAsync<OrderCreatedEvent>(configuration["Kafka:Topics:OrderCreatedTopic"],
+        return eventLogProducer.ProduceAsync<OrderCreatedEvent>(kafkaOptions.Topics.OrderCreatedTopic,
             orderCreatedEvent, CancellationToken.None);
     }
 }
