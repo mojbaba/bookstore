@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="CreateOrder\Events\" />
+    <Folder Include="TokenPurchaseServiceKafkaEvents\" />
   </ItemGroup>
 
 </Project>

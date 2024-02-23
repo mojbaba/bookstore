@@ -8,16 +8,10 @@ public class BookQueryHandler(IBookRepository bookRepository) : IBookQueryHandle
     public async Task<QueryBookResponse> HandleAsync(QueryBookRequest request, CancellationToken cancellationToken)
     {
         IEnumerable<BookEntity> bookEntities;
+        
         if (request.BookIds.Any())
         {
             bookEntities = await bookRepository.GetBooksByIdAsync(request.BookIds, cancellationToken);
-            var notFoundBookIds = request.BookIds.Except(bookEntities.Select(book => book.Id)).ToList();
-
-            if (notFoundBookIds.Count != 0)
-            {
-                throw new QueryBookException("The following book ids are not found: " +
-                                             string.Join(", ", notFoundBookIds));
-            }
         }
         else
         {

@@ -44,7 +44,7 @@ public class KafkaUserLoggedoutConsumer : BackgroundService
                 var consumeResult = consumer.Consume(stoppingToken);
                 var userLoggedOutEvent =
                     JsonSerializer.Deserialize<UserLoggedOutEvent>(consumeResult.Message.Value);
-                _userLoggedOutHandler.Handle(userLoggedOutEvent, stoppingToken).Wait(stoppingToken);
+                _userLoggedOutHandler.HandleAsync(userLoggedOutEvent, stoppingToken).Wait(stoppingToken);
             }
             catch (OperationCanceledException)
             {

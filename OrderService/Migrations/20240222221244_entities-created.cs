@@ -18,7 +18,9 @@ namespace OrderService.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    IsPaymentProcessed = table.Column<bool>(type: "boolean", nullable: false),
+                    IsInventoryProcessed = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

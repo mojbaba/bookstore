@@ -88,6 +88,14 @@ public class Program
         builder.Services.RegisterEventSourceObservant();
         builder.Services.AddRedisTokenValidationService();
         
+        builder.Services.AddTransient(provider =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            KafkaOptions kafkaOptions = new KafkaOptions();
+            configuration.GetSection("Kafka").Bind(kafkaOptions);
+            return kafkaOptions;
+        });
+        
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
