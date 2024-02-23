@@ -3,14 +3,14 @@ using BookStore.Contracts;
 using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
 using Confluent.Kafka;
-using UserService.Logout;
+using OrderService.CreateOrder;
 
-namespace OrderService.InventoryServiceEvents;
+namespace TokenService.KafkaOrderEventsConsumer;
 
-public class KafkaOrderedBooksPackedConsumer(KafkaOptions kafkaOptions, IEventPublishObservant observant)
-    : KafkaConsumerBase<OrderedBooksPackedEvent>(kafkaOptions, observant)
+public class KafkaOrderCreatedEventConsumer(KafkaOptions kafkaOptions, IEventPublishObservant observant)
+    : KafkaConsumerBase<OrderCreatedEvent>(kafkaOptions, observant)
 {
-    protected override string GetTopic(KafkaOptions kafkaOptions) => kafkaOptions.Topics.BooksPackedTopic;
+    protected override string GetTopic(KafkaOptions kafkaOptions) => kafkaOptions.Topics.OrderCreatedTopic;
 
     protected override void HandleException(Exception e)
     {

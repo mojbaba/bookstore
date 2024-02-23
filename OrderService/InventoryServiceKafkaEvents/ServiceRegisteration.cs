@@ -1,3 +1,4 @@
+using BookStore.EventObserver;
 using OrderService.EventLogConsumers;
 using OrderService.InventoryServiceEvents;
 
@@ -12,6 +13,9 @@ public static class ServiceRegisteration
 
         services.AddTransient<OrderedBooksPackedEventHandler>();
         services.AddTransient<OrderedBooksPackingFailedEventHandler>();
+
+        services.AddSingleton<IEventPublishObserver, OrderedBooksPackedEventObserver>();
+        services.AddSingleton<IEventPublishObserver, OrderedBooksPackingFailedEventObserver>();
         
         return services;
     }
