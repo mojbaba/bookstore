@@ -9,10 +9,16 @@ namespace InventoryService.QueryBooks;
 public class QueryBookController(IBookQueryHandler bookQueryHandler) : ControllerBase
 {
     [HttpGet("query")]
-    public async Task<IActionResult> QueryBooksAsync(QueryBookRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> QueryBooksAsync([FromQuery] IEnumerable<string> bookIds,
+        CancellationToken cancellationToken)
     {
         try
         {
+            var request = new QueryBookRequest()
+            {
+                BookIds = bookIds ?? new string[] { },
+            };
+
             var response = await bookQueryHandler.HandleAsync(request, cancellationToken);
             return Ok(response);
         }
