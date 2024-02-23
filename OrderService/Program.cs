@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OrderService.CreateOrder;
 using OrderService.Entities;
+using OrderService.InventoryServiceKafkaEvents;
+using OrderService.TokenPurchaseServiceKafkaEvents;
 using StackExchange.Redis;
 
 namespace OrderService;
@@ -114,6 +116,9 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]))
             };
         });
+
+        builder.Services.AddInventoryServiceKafkaEvents();
+        builder.Services.AddTokenPurchaseServiceKafkaEvents();
 
         builder.Services.AddControllers();
 
