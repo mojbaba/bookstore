@@ -8,13 +8,17 @@ public class KafkaEventLogProducer : IEventLogProducer
 {
     private readonly IProducer<string, string> _producer;
 
-    public KafkaEventLogProducer(ProducerConfig producerConfig)
+    public KafkaEventLogProducer(KafkaOptions kafkaOptions)
     {
+        var producerConfig = new ProducerConfig
+        {
+            BootstrapServers = kafkaOptions.BootstrapServers
+        };
         _producer = new ProducerBuilder<string, string>(producerConfig).Build();
     }
-    
+
     public Task ProduceAsync<TEvent>(string channelName, TEvent @event, CancellationToken cancellationToken)
-        where TEvent: IEvent
+        where TEvent : IEvent
     {
         var eventJson = JsonSerializer.Serialize<TEvent>(@event);
         return _producer.ProduceAsync(channelName, new Message<string, string>

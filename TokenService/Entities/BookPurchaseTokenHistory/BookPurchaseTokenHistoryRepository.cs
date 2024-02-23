@@ -53,4 +53,9 @@ public class BookPurchaseTokenHistoryRepository(BookPurchaseTokenDbContext dbCon
     {
         return dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<BookPurchaseTokenHistoryEntity>> GetItemsByOrderIdAsync(string orderId, CancellationToken cancellationToken)
+    {
+        return await dbContext.History.Where(a => a.OrderId == orderId).ToListAsync(cancellationToken);
+    }
 }

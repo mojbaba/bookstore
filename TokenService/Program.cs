@@ -2,6 +2,7 @@ using System.Text;
 using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.Authentication.Jwt.Redis;
+using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
 using BookStore.RedisLock;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +13,7 @@ using StackExchange.Redis;
 using TokenService.AddToken;
 using TokenService.BookPurchaseTokenHistoryHandlers;
 using TokenService.Entities;
+using TokenService.KafkaOrderEventsConsumer;
 using TokenService.RemoveToken;
 
 namespace TokenService;
@@ -65,6 +67,8 @@ public class Program
         builder.Services.AddTransient<IRemoveBookPurchaseTokenService, RemoveBookPurchaseTokenService>();
         builder.Services.AddTransient<IBookPurchaseTokenAddedHandler, BookPurchaseTokenAddedHandler>();
         builder.Services.AddTransient<IBookPurchaseTokenRemovedHandler, BookPurchaseTokenRemovedHandler>();
+        
+        builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
 
         builder.Services.AddSingleton(p =>
         {
@@ -103,8 +107,18 @@ public class Program
 
         builder.Services.RegisterEventSourceObservant();
 
+        builder.Services.AddKafkaOrderEventsConsumers();
+
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenAddedObserverForHistory>();
         builder.Services.AddSingleton<IEventPublishObserver, ObserversForHistory.TokenRemovedObserverForHistory>();
+        
+        builder.Services.AddTransient(provider =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            KafkaOptions kafkaOptions = new KafkaOptions();
+            configuration.GetSection("Kafka").Bind(kafkaOptions);
+            return kafkaOptions;
+        });
 
         builder.Services.AddKafkaUserLoggedOutHandler(p =>
         {

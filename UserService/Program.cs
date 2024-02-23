@@ -90,6 +90,14 @@ public class Program
             };
         });
 
+        builder.Services.AddTransient(provider =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            KafkaOptions kafkaOptions = new KafkaOptions();
+            configuration.GetSection("Kafka").Bind(kafkaOptions);
+            return kafkaOptions;
+        });
+
         builder.Services.AddSingleton<IEventPublishObserver, UserLoggedOutObserver>();
         builder.Services.AddSingleton<IEventPublishObserver, UserRegisteredKafkaObserver>();
         builder.Services.AddSingleton<IEventPublishObserver, UserLoggedInKafkaObserver>();
