@@ -30,6 +30,12 @@ namespace OrderService.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsInventoryProcessed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPaymentProcessed")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 

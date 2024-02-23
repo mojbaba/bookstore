@@ -12,7 +12,7 @@ using OrderService.Entities;
 namespace OrderService.Migrations
 {
     [DbContext(typeof(OrderServiceDbContext))]
-    [Migration("20240222193827_entities-created")]
+    [Migration("20240222221244_entities-created")]
     partial class entitiescreated
     {
         /// <inheritdoc />
@@ -32,6 +32,12 @@ namespace OrderService.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsInventoryProcessed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPaymentProcessed")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");

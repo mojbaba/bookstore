@@ -20,6 +20,11 @@ public class OrderEntity
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     
     public ICollection<OrderItemEntity> Items { get; set; } = new List<OrderItemEntity>();
+
+    public bool IsPaymentProcessed { get; set; }
+
+    public bool IsInventoryProcessed { get; set; }
+    public string FailReason { get; set; }
 }
 
 public class OrderItemEntity
