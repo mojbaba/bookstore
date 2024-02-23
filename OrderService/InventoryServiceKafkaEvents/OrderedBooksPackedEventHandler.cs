@@ -23,5 +23,7 @@ public class OrderedBooksPackedEventHandler(IOrderRepository orderRepository)
         }
         
         await orderRepository.UpdateAsync(order, cancellationToken);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
     }
 }

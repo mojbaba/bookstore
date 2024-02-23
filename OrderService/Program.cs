@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using OrderService.CreateOrder;
 using OrderService.Entities;
 using OrderService.InventoryServiceKafkaEvents;
+using OrderService.KafkaObserversForProduce;
 using OrderService.TokenPurchaseServiceKafkaEvents;
 using StackExchange.Redis;
 
@@ -116,6 +117,7 @@ public class Program
         builder.Services.AddEntities();
 
         builder.Services.AddCreateOrderServices();
+        builder.Services.AddKafkaObserversForProduce();
 
         builder.Services.AddControllers();
 
