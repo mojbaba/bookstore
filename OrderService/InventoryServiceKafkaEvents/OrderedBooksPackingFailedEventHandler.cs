@@ -13,11 +13,26 @@ public class OrderedBooksPackingFailedEventHandler(
     public async Task HandleAsync(OrderedBooksPackingFailedEvent @event, CancellationToken cancellationToken)
     {
         var order = await orderRepository.GetAsync(@event.OrderId, cancellationToken);
+        var previousStatus = order.Status;
         order.Status = OrderStatus.Failed;
-        order.FailReason = @event.Reason;
+        
+        if (order.FailReason is not null)
+        {
+            order.FailReason += $", {@event.Reason}";
+        }
+        else
+        {
+            order.FailReason = @event.Reason;
+        }
+
         await orderRepository.UpdateAsync(order, cancellationToken);
 
         await orderRepository.SaveChangesAsync(cancellationToken);
+        
+        if(previousStatus == OrderStatus.Failed) //already published event
+        {
+            return;
+        }
 
         var orderFailedEvent = new OrderFailedEvent()
         {

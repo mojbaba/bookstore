@@ -13,11 +13,26 @@ public class BalanceDeductionFailedEventHandler(
         CancellationToken cancellationToken)
     {
         var order = await orderRepository.GetAsync(balanceDeductionFailedEvent.OrderId, cancellationToken);
+        var previousStatus = order.Status;
+
         order.Status = OrderStatus.Failed;
-        order.FailReason = balanceDeductionFailedEvent.Reason;
-        
+
+        if (order.FailReason is not null)
+        {
+            order.FailReason += $", {balanceDeductionFailedEvent.Reason}";
+        }
+        else
+        {
+            order.FailReason = balanceDeductionFailedEvent.Reason;
+        }
+
         await orderRepository.UpdateAsync(order, cancellationToken);
         await orderRepository.SaveChangesAsync(cancellationToken);
+
+        if(previousStatus == OrderStatus.Failed) //already published event
+        {
+            return;
+        }
         
         await eventPublishObservant.PublishAsync(new OrderFailedEvent
         {
