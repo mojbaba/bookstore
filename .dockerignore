@@ -1,0 +1,24 @@
+# Ignore .NET build artifacts
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+
+# Ignore Visual Studio files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Ignore ReSharper files
+_ReSharper*/
+
+# Ignore Git files
+.git/
+.gitignore
+
+# Ignore Docker files
+Dockerfile
+# *.DockerFile
+# docker-compose.yml
