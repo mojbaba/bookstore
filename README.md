@@ -96,9 +96,15 @@ cd bookstore
 
 ### 3. Run the infrastructure
 
+
 ```bash
 docker compose --file docker-compose.infra.yml up -d
 ```
+if you get network error, you can create a network with the following command:
+```bash
+docker network create bookstore
+```
+
 
 ### 4. Run the migrations
 
