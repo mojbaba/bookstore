@@ -21,7 +21,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         builder.Configuration.AddJsonFile("appsettings.json");
         builder.Configuration.AddEnvironmentVariables();
 
@@ -124,6 +124,17 @@ public class Program
 
         builder.Services.AddControllers();
 
+        builder.Services.AddKafkaUserLoggedOutHandler(p =>
+        {
+            var configuration = p.GetRequiredService<IConfiguration>();
+            return new KafkaUserLoggedOutOptions
+            {
+                GroupId = configuration["Kafka:GroupId"],
+                BootstrapServers = configuration["Kafka:BootstrapServers"],
+                Topic = configuration["Kafka:Topics:UserLogoutTopic"]
+            };
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -143,7 +154,7 @@ public class Program
         app.MapControllers();
 
         app.UseHttpsRedirection();
-        
+
         app.Run();
     }
 }
