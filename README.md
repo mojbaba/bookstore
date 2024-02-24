@@ -207,3 +207,4 @@ on Swagger UI (TokenService -> balance) (must authorize with the token got from 
 
 the user's balance is deducted by 1500 after the order is processed.
 
+*the inventory service is not completely implemented, so the inventory is not deducted after the order is processed. it just accepts the order anyway and published success packed books event*
