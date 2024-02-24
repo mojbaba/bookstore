@@ -255,6 +255,12 @@ the user's balance is deducted by 1500 after the order is processed.
 
 ## Notes
 
+- In real world, the services should be deployed in the kubernetes cluster.
+
+- Each service repository should be separated and have its own CI/CD pipeline. 
+
+- The project with the name `BookStore.*` are the libraries and the shared code between the services. they should be separated and have their own CI/CD pipeline. and should be published to the private nuget repository. (I dont like to use some `Common` or `Shared` libraries, because they are not maintainable and they are not designed to be used in the other projects. they are just a bunch of code that are not related to each other.)
+
 - The authorization are implemented with JWT. so when user log out, the token is blacklisted and the user can't use it anymore. the other services get notified by the the Kafka event.
 
 - The blacklisted tokens are stored in the Redis cache with some expiration time.
