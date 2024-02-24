@@ -14,6 +14,7 @@ using TokenService.AddToken;
 using TokenService.BookPurchaseTokenHistoryHandlers;
 using TokenService.Entities;
 using TokenService.KafkaOrderEventsConsumer;
+using TokenService.QueryUserBalance;
 using TokenService.RemoveToken;
 
 namespace TokenService;
@@ -70,6 +71,7 @@ public class Program
         builder.Services.AddTransient<IRemoveBookPurchaseTokenService, RemoveBookPurchaseTokenService>();
         builder.Services.AddTransient<IBookPurchaseTokenAddedHandler, BookPurchaseTokenAddedHandler>();
         builder.Services.AddTransient<IBookPurchaseTokenRemovedHandler, BookPurchaseTokenRemovedHandler>();
+        builder.Services.AddTransient<IUserBalanceQueryHandler, UserBalanceQueryHandler>();
         
         builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
 

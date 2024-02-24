@@ -51,6 +51,7 @@ services:
       - ConnectionStrings__PostgreSqlConnection=User ID=dev;Host=order-service-db;Port=5432; Database=dev; Username=dev; Password=dev
       - ConnectionStrings__RedisConnection=order-service-redis
       - Kafka__BootstrapServers=kafka:29092
+      - Urls__InventoryService=http://inventory-service-api:8080
     networks:
       - bookstore
 
