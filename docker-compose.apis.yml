@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  inventory-service-api:
+    build:
+      context: .
+      dockerfile: InventoryService.Dockerfile          
+    ports:
+      - 8080:8080
+    environment:
+      - ConnectionStrings__PostgreSqlConnection=User ID=dev;Host=inventory-service-db;Port=5432; Database=dev; Username=dev; Password=dev
+      - ConnectionStrings__RedisConnection=inventory-service-redis
+      - Kafka__BootstrapServers=kafka:29092
+    networks:
+      - bookstore
+
+  user-service-api:
+    build:
+      context: .
+      dockerfile: UserService.Dockerfile          
+    ports:
+      - 8081:8080
+    environment:
+      - ConnectionStrings__PostgreSqlConnection=User ID=dev;Host=user-service-db;Port=5432; Database=dev; Username=dev; Password=dev
+      - ConnectionStrings__RedisConnection=user-service-redis
+      - Kafka__BootstrapServers=kafka:29092
+    networks:
+      - bookstore
+
+  token-service-api:
+    build:
+      context: .
+      dockerfile: TokenService.Dockerfile          
+    ports:
+      - 8082:8080
+    environment:
+      - ConnectionStrings__PostgreSqlConnection=User ID=dev;Host=token-service-db;Port=5432; Database=dev; Username=dev; Password=dev
+      - ConnectionStrings__RedisConnection=token-service-redis
+      - Kafka__BootstrapServers=kafka:29092
+    networks:
+      - bookstore
+
+
+  
+  order-service-api:
+    build:
+      context: .
+      dockerfile: OrderService.Dockerfile          
+    ports:
+      - 8083:8080
+    environment:
+      - ConnectionStrings__PostgreSqlConnection=User ID=dev;Host=order-service-db;Port=5432; Database=dev; Username=dev; Password=dev
+      - ConnectionStrings__RedisConnection=order-service-redis
+      - Kafka__BootstrapServers=kafka:29092
+    networks:
+      - bookstore
+
+
+
+networks:
+  bookstore:
+    name: bookstore
+    external: true

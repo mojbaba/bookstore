@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+
+  inventory-service-migrations:
+    build:
+      context: .
+      dockerfile: InventoryService.Migrations.Dockerfile
+    command: "./migrations-bundle --connection 'User ID=dev;Host=inventory-service-db;Port=5432; Database=dev; Username=dev; Password=dev'"
+    networks:
+      - bookstore
+
+  order-service-migrations:
+    build:
+      context: .
+      dockerfile: OrderService.Migrations.Dockerfile
+    command: "./migrations-bundle --connection 'User ID=dev;Host=order-service-db;Port=5432; Database=dev; Username=dev; Password=dev'"
+    networks:
+      - bookstore
+
+  token-service-migrations:
+    build:
+      context: .
+      dockerfile: TokenService.Migrations.Dockerfile
+    command: "./migrations-bundle --connection 'User ID=dev;Host=token-service-db;Port=5432; Database=dev; Username=dev; Password=dev'"
+    networks:
+      - bookstore
+
+  user-service-migrations:
+    build:
+      context: .
+      dockerfile: UserService.Migrations.Dockerfile
+    command: "./migrations-bundle --connection 'User ID=dev;Host=user-service-db;Port=5432; Database=dev; Username=dev; Password=dev'"
+    networks:
+      - bookstore
+
+networks:
+  bookstore:
+    name: bookstore
+    external: true
