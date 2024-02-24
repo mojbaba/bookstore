@@ -265,3 +265,4 @@ the user's balance is deducted by 1500 after the order is processed.
 
 - The services are not Completly DDD, CQRS, Event Sourcing, but they are designed to be implemented with these patterns.
 
+- The event log consumers are the default kafka consumers, which means they are garantee at least once delivery. but each service stores the events in the database and checks the event id to prevent duplicate processing.
