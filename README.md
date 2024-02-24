@@ -71,6 +71,8 @@ cd bookstore
 
 There are integration tests which test the services in isolation but with the real database, redis and kafka. They test each service use case and the flow of the services.
 
+- Integration tests use TestContainers to run the real database, redis and kafka in the docker containers. So you need to have docker and docker-compose installed.
+
 *there should be lots of unit tests for each service, but I didn't have enough time to implement them.*
 
 ```bash
