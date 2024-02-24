@@ -3,9 +3,11 @@ using BookStore.Authentication.Jwt;
 using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.Authentication.Jwt.Redis;
 using BookStore.EventLog.Kafka;
+using BookStore.EventObserver;
 using BookStore.RedisLock;
 using InventoryService.AdminOperations;
 using InventoryService.Entities;
+using InventoryService.KafkaOrderEventsConsumer;
 using InventoryService.QueryBooks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +59,8 @@ public class Program
 
         builder.Services.AddEntites();
 
+        builder.Services.AddSingleton<IEventLogProducer, KafkaEventLogProducer>();
+
         builder.Services.AddSingleton(p =>
         {
             var configuration = p.GetRequiredService<IConfiguration>();
@@ -94,7 +98,11 @@ public class Program
             return kafkaOptions;
         });
 
+        builder.Services.AddHostedService<KafkaOrderCreatedEventConsumer>();
+
         builder.Services.AddTransient<IBookQueryHandler, BookQueryHandler>();
+        builder.Services.AddSingleton<IEventPublishObserver, OrderCreatedEventObserver>();
+        builder.Services.AddTransient<OrderCreatedEventHandler>();
 
         builder.Services.AddControllers();
         
@@ -117,6 +125,9 @@ public class Program
             };
         });
 
+        builder.Services.RegisterEventSourceObservant();
+        
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -130,6 +141,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.SubscribeObservers();
 
         app.MapControllers();
 
