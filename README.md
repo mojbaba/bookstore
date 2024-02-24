@@ -1,4 +1,7 @@
 # bookstore
+
+## Architecture Overview
+
 ```
 Microservices
 │
@@ -11,6 +14,37 @@ Microservices
 └── OrderService/
 ```
 
+- **UserService**: Manages the user registration and login. It's responsible for user authentication and authorization.
+
+- **TokenService**: Manages the user's balance and the user's purchase token. It's responsible for the user's balance and the user's purchase token.
+
+- **InventoryService**: Manages the books and the inventory. It's responsible for the books and the inventory.
+
+- **OrderService**: Manages the orders and the order processing. It's responsible for the orders and the order processing.
+
+## Communication
+
+![diagram.jpg](diagram.jpg)
+
+## Technologies
+
+- **.NET 8.0**: The services are built with .NET 8.0.
+
+- **Docker**: The services are containerized with Docker.
+
+- **Docker Compose**: The services are orchestrated with Docker Compose.
+
+- **PostgreSQL**: The database is PostgreSQL.
+
+- **Redis**: The cache is Redis.
+
+- **Kafka**: The message broker is Kafka.
+
+- **Swagger**: The services are documented with Swagger.
+
+- **xUnit**: The tests are written with xUnit.
+
+
 ## Requirements
 
 - [Docker](https://www.docker.com/)
@@ -18,6 +52,8 @@ Microservices
 - [Docker Compose](https://docs.docker.com/compose/)
 
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+- The projects are build in a debian linux distro, so it's better to run them in a linux environment.
 
 ## Running the tests
 
@@ -208,3 +244,22 @@ on Swagger UI (TokenService -> balance) (must authorize with the token got from 
 the user's balance is deducted by 1500 after the order is processed.
 
 *the inventory service is not completely implemented, so the inventory is not deducted after the order is processed. it just accepts the order anyway and published success packed books event*
+
+## Notes
+
+- The authorization are implemented with JWT. so when user log out, the token is blacklisted and the user can't use it anymore. the other services get notified by the the Kafka event.
+
+- The blacklisted tokens are stored in the Redis cache with some expiration time.
+
+- The services are not completely implemented, so there are some missing parts and bugs.
+
+- Services are totally stateless and can be scaled horizontally.
+
+- API Gateway, Circuit Breaker, Rate Limiting, etc. are not implemented.
+
+- Notifications, Logging, Monitoring, etc. are not implemented.
+
+- It can be implemented with gRPC instead of REST inter-comunications.
+
+- The services are not Completly DDD, CQRS, Event Sourcing, but they are designed to be implemented with these patterns.
+
