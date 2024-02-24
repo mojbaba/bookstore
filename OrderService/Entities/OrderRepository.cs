@@ -50,4 +50,9 @@ public class OrderRepository(OrderServiceDbContext dbContext) : IOrderRepository
     {
         return dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<OrderEntity>> AllAsync(CancellationToken cancellationToken)
+    {
+        return await dbContext.Orders.ToListAsync(cancellationToken);
+    }
 }
