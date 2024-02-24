@@ -17,21 +17,31 @@ public class OrderCreatedEventHandler(
         // if the stock is enough, it must send an event to the order service to tell the payment is processed
 
         //currently this is a dummy implementation, and sends a success event: OrderedBooksPackEvent
+        Console.WriteLine("OrderCreatedEventHandler: Handling OrderCreatedEvent");
 
-        var successEvent = new OrderedBooksPackedEvent()
+        try
         {
-            OrderId = orderCreatedEvent.OrderId,
-            TotalPrice = orderCreatedEvent.TotalPrice,
-            BookIds = orderCreatedEvent.BookIds
-        };
+            var successEvent = new OrderedBooksPackedEvent()
+            {
+                OrderId = orderCreatedEvent.OrderId,
+                TotalPrice = orderCreatedEvent.TotalPrice,
+                BookIds = orderCreatedEvent.BookIds
+            };
 
-        await SendSuccessEvent(successEvent, cancellationToken);
+            await SendSuccessEvent(successEvent, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private Task SendSuccessEvent(OrderedBooksPackedEvent successEvent,
         CancellationToken cancellationToken)
     {
         //send an event to the order service to cancel the order
+        Console.WriteLine("OrderCreatedEventHandler: Sending OrderedBooksPackedEvent");
         return eventLogProducer.ProduceAsync(kafkaOptions.Topics.BooksPackedTopic,
             successEvent,
             cancellationToken);
