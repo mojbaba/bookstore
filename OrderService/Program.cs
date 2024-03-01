@@ -1,5 +1,6 @@
 using System.Text;
 using BookStore.Authentication.Jwt;
+using BookStore.Authentication.Jwt.KafkaLoggedOut;
 using BookStore.Authentication.Jwt.Redis;
 using BookStore.EventLog.Kafka;
 using BookStore.EventObserver;
